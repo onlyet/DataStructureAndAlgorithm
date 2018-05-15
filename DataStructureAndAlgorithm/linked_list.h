@@ -3,7 +3,7 @@
 #endif // !LINKED_LIST_H
 
 struct LinkedListNode {
-
+	
 	LinkedListNode *next;
 };
 
@@ -13,17 +13,23 @@ public:
 	ListBase() {}
 	~ListBase() {}
 public:
-	virtual void Insert(size_t pos, const T& e);
-	virtual void Erase(size_t pos);
-	virtual void Set(size_t pos, const T& e);
-	virtual void Get(size_t pos, T& e);
+	virtual bool Insert(size_t pos, const T& e);
+	virtual bool Erase(size_t pos);
+	virtual bool Set(size_t pos, const T& e);
+	virtual bool Get(size_t pos, T& e);
+	virtual bool Empty();
 	virtual int Find(const T& e);
-	virtual void find();
 	virtual size_t Length();
 };
 
-class LinkedList {
+template<typename T>
+class LinkedList : public ListBase<T>{
 public:
 private:
-	LinkedList* next;
+	struct LinkedListNode {
+		T data;
+		LinkedListNode *next;
+	};
+	LinkedListNode node;
+	size_t length;
 };
