@@ -111,12 +111,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="DoubleLinkedList.h" />
+    <ClInclude Include="linked_list.h" />
+    <ClInclude Include="sequence_list.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DoubleLinkedList.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="sequence_list.cpp" />
-    <ClCompile Include="sequence_list.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

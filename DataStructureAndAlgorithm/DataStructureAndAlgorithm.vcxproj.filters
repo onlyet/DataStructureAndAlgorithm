@@ -18,15 +18,15 @@
     <ClInclude Include="DoubleLinkedList.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="sequence_list.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="linked_list.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DoubleLinkedList.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="sequence_list.h">
-      <Filter>头文件</Filter>
-    </ClCompile>
-    <ClCompile Include="sequence_list.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
