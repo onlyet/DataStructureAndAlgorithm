@@ -39,6 +39,6 @@
 //	typedef DoubleLinkedListNode<T> DLLNode;
 //	
 //		DLLNode *phead;	// head pointer
-//	//DoubleLinkedListNode<T> *pNode;
+//	//DoubleLinkedListNode<T> *phead;
 //	int m_count;
 //};

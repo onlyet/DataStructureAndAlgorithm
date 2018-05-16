@@ -8,12 +8,14 @@
 
 #include"sequence_list.h"
 //#include"sequence_list.cpp"
+#include"linked_list.h"
 
 #include<iostream>
+#include<string>
 
 using namespace std;
 
-int main()
+void sequence_list_test()
 {
 	try {
 		SequenceList<int> s;
@@ -25,7 +27,7 @@ int main()
 		s.PushBack(10);
 		s.Print();
 
-	/*	cout << s.Find(100) << endl;
+		/*	cout << s.Find(100) << endl;
 		cout << s.Find(7) << endl;*/
 
 		s.PushBack(6);
@@ -35,7 +37,7 @@ int main()
 		s.RemoteAll(6);
 		s.Print();
 
-	/*	s.Insert(-1, 223);
+		/*	s.Insert(-1, 223);
 		s.Erase(5);
 		s.Print();
 
@@ -48,7 +50,7 @@ int main()
 		s.Print();*/
 
 		//s.Clear();
-	/*	s.Destory();
+		/*	s.Destory();
 		s.Print();*/
 		//cout << s.Length() << endl;
 	}
@@ -56,6 +58,43 @@ int main()
 		cout << "exception: " << e.what() << endl;
 		//exit(1);
 	}
+}
+
+void linked_list_test()
+{
+	LinkedList<string> l;
+	l.Insert(1, "hello");
+	l.Insert(2, "Micheal");
+	l.Insert(3, "!");
+	l.Print();
+	l.PushBack("what");
+	l.PushBack("the");
+	l.Print();
+	string s;
+	l.Erase(2, s);
+	cout << "erase node :" << s << endl;
+	l.Print();
+	l.PushFront("one");
+	l.Print();
+	l.PopFront(s);
+	cout << "erase node :" << s << endl;
+	l.Print();
+	l.PopBack(s);
+	l.Print();
+
+	cout << "the length = " << l.Length() << endl;
+	cout << "find string at " << l.Find("hello") << endl;
+	l.Get(3, s);
+	cout << "get string = " << s << endl;
+	l.Set(2, "auto");
+	l.Print();
+	
+}
+
+int main()
+{
+	
+	linked_list_test();
 
 	system("pause");
 	return 0;

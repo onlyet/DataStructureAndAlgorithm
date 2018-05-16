@@ -33,11 +33,11 @@
 //template<typename T>
 //int DoubleLinkedList<T>::insert_first(T data)
 //{
-//	DLLNode *pnode = new DLLNode(phead, phead->next, data);
+//	DLLNode *phead = new DLLNode(phead, phead->next, data);
 //
-//	phead->next->head = pnode;	//prev of first node point to new node
-//	phead->next = pnode;		//next of head node point to new node 
-//	pnode->data = data;
+//	phead->next->head = phead;	//prev of first node point to new node
+//	phead->next = phead;		//next of head node point to new node 
+//	phead->data = data;
 //	++m_count;
 //
 //	return 0;
@@ -46,11 +46,11 @@
 //template<typename T>
 //int DoubleLinkedList<T>::insert_last(T data)
 //{
-//	DLLNode *pnode = new DLLNode(phead->prev, phead, data);
+//	DLLNode *phead = new DLLNode(phead->prev, phead, data);
 //
-//	phead->prev->next = pnode;
-//	phead->prev = pnode;
-//	pnode->data = data;
+//	phead->prev->next = phead;
+//	phead->prev = phead;
+//	phead->data = data;
 //	++m_count;
 //
 //	return 0;

@@ -2,34 +2,168 @@
 #define LINKED_LIST_H
 #endif // !LINKED_LIST_H
 
-struct LinkedListNode {
-	
-	LinkedListNode *next;
-};
-
 template<typename T>
 class ListBase{
 public:
-	ListBase() {}
-	~ListBase() {}
+	//ListBase() {}
+	virtual ~ListBase() {}
 public:
-	virtual bool Insert(size_t pos, const T& e);
-	virtual bool Erase(size_t pos);
-	virtual bool Set(size_t pos, const T& e);
-	virtual bool Get(size_t pos, T& e);
-	virtual bool Empty();
-	virtual int Find(const T& e);
-	virtual size_t Length();
+	virtual bool Insert(size_t pos, const T& e) = 0;
+	virtual bool Erase(size_t pos, T& e) = 0;
+	virtual void Print() = 0;
+	virtual bool Set(size_t pos, const T& e) = 0;
+	virtual bool Get(size_t pos, T& e) = 0;
+	virtual bool Empty() = 0;
+	virtual int Find(const T& e) = 0;
+	virtual size_t Length() = 0;
+};
+
+template<typename T>
+struct LinkedListNode {
+	LinkedListNode() : pnext(nullptr) {}
+	T data;
+	LinkedListNode *pnext;
 };
 
 template<typename T>
 class LinkedList : public ListBase<T>{
 public:
+	LinkedList() : phead(new LinkedListNode<T>), length(0) {}
+public:
+
+	bool Insert(size_t pos, const T& e) override;
+	//删除和插入不同，插入只有保证第pos-1个结点存在就行，而删除要保证第pos-1和pos个结点都存在
+	bool Erase(size_t pos, T& e) override;
+	void Print() override;
+	size_t Length() override;
+	bool Set(size_t pos, const T& e) override;
+	bool Get(size_t pos, T& e) override;
+	bool Empty() override { return 0 == Length(); }
+	//顺序查找，返回data=e的第一个结点位置，如果找不到返回-1
+	int Find(const T& e) override;
+
+	bool PushBack(const T& e) { return Insert(Length() + 1, e); }
+	bool PushFront(const T& e) { return Insert(1, e); }
+	bool PopBack(T& e) { return Erase(Length(), e); }
+	bool PopFront(T& e) { return Erase(1, e); }
+
 private:
-	struct LinkedListNode {
-		T data;
-		LinkedListNode *next;
-	};
-	LinkedListNode node;
+	//返回第pos个结点的指针，pos=0代表头结点
+	virtual LinkedListNode<T>* Locate(size_t pos);
+
+private:
+	LinkedListNode<T>* phead;
 	size_t length;
 };
+
+template<typename T>
+LinkedListNode<T>* LinkedList<T>::Locate(size_t pos)
+{
+	if (pos < 0) {
+		return nullptr;
+	}
+	int i = 0;	//第i个结点
+	LinkedListNode<T>* p = phead;
+	while (p && i < pos) {	//pos=0的时候返回头结点
+		p = p->pnext;
+		++i;
+	}
+	return p;
+}
+
+template<typename T>
+bool LinkedList<T>::Insert(size_t pos, const T& e)
+{
+	LinkedListNode<T>* p = Locate(pos - 1);
+	if (!p) {
+		cout << "Insert() error" << endl;
+		return false;
+	}
+
+	LinkedListNode<T> *s = new LinkedListNode<T>;
+	if (!s) {
+		return false;	//应不应该抛出异常？
+	}
+	s->data = e;
+	s->pnext = p->pnext;
+	p->pnext = s;
+	++length;
+	return true;
+}
+
+template<typename T>
+bool LinkedList<T>::Erase(size_t pos, T& e)
+{
+	LinkedListNode<T>* p = Locate(pos - 1);
+	if (!p || !p->pnext) {	//验证第pos-1和第pos个结点存在
+		cout << "Erase() error" << endl;
+		return false;
+	}
+	LinkedListNode<T>* s = p->pnext;
+	e = s->data;
+	p->pnext = s->pnext;
+	delete s;
+	return true;
+}
+
+template<typename T>
+void LinkedList<T>::Print()
+{
+	LinkedListNode<T> *p = phead->pnext;	//第一个结点
+	while (p) {
+		cout << p->data << " ";
+		p = p->pnext;
+	}
+	cout << endl;
+}
+
+template<typename T>
+size_t LinkedList<T>::Length()
+{
+	LinkedListNode<T>* p = phead->pnext;
+	int cnt = 0;
+	while (p) {
+		p = p->pnext;
+		++cnt;
+	}
+	return cnt;
+}
+
+template<typename T>
+bool LinkedList<T>::Set(size_t pos, const T& e)
+{
+	LinkedListNode<T>* p = Locate(pos);
+	if (!p) {
+		cout << "Set() error" << endl;
+		return false;
+	}
+	p->data = e;
+	return true;
+}
+
+template<typename T>
+bool LinkedList<T>::Get(size_t pos, T& e)
+{
+	LinkedListNode<T>* p = Locate(pos);
+	if (!p) {
+		cout << "Get() error" << endl;
+		return false;
+	}
+	e = p->data;
+	return true;
+}
+
+template<typename T>
+int LinkedList<T>::Find(const T& e)
+{
+	int i = 1;
+	LinkedListNode<T>* p = phead->pnext;
+	while (p) {
+		if (e == p->data) {
+			return i;
+		}
+		p = p->pnext;
+		++i;
+	}
+	return -1;
+}
