@@ -88,7 +88,12 @@ void linked_list_test()
 	cout << "get string = " << s << endl;
 	l.Set(2, "auto");
 	l.Print();
-	
+	//l.Clear();
+	//cout << l.Length() << endl;
+	//l.reverse();
+	//l.Print();
+	l.recursive_reverse(l.Locate(1));
+	l.Print();
 }
 
 int main()

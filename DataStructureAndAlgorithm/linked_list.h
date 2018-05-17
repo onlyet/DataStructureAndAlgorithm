@@ -16,6 +16,7 @@ public:
 	virtual bool Empty() = 0;
 	virtual int Find(const T& e) = 0;
 	virtual size_t Length() = 0;
+	virtual void Clear() = 0;
 };
 
 template<typename T>
@@ -25,10 +26,12 @@ struct LinkedListNode {
 	LinkedListNode *pnext;
 };
 
+//带头结点的单链表
 template<typename T>
 class LinkedList : public ListBase<T>{
 public:
-	LinkedList() : phead(new LinkedListNode<T>), length(0) {}
+	LinkedList() : phead(new LinkedListNode<T>) {}
+	~LinkedList() { Clear(); if(phead) delete phead; }
 public:
 
 	bool Insert(size_t pos, const T& e) override;
@@ -41,19 +44,24 @@ public:
 	bool Empty() override { return 0 == Length(); }
 	//顺序查找，返回data=e的第一个结点位置，如果找不到返回-1
 	int Find(const T& e) override;
+	void Clear() override;
 
 	bool PushBack(const T& e) { return Insert(Length() + 1, e); }
 	bool PushFront(const T& e) { return Insert(1, e); }
 	bool PopBack(T& e) { return Erase(Length(), e); }
 	bool PopFront(T& e) { return Erase(1, e); }
 
-private:
+	LinkedListNode<T>* Head();
+	//反转链表
+	void reverse();
+	LinkedListNode<T>* recursive_reverse(LinkedListNode<T>* p);
+
 	//返回第pos个结点的指针，pos=0代表头结点
 	virtual LinkedListNode<T>* Locate(size_t pos);
 
 private:
 	LinkedListNode<T>* phead;
-	size_t length;
+	//size_t length;	//不用length也不影响
 };
 
 template<typename T>
@@ -87,10 +95,11 @@ bool LinkedList<T>::Insert(size_t pos, const T& e)
 	s->data = e;
 	s->pnext = p->pnext;
 	p->pnext = s;
-	++length;
+	//++length;
 	return true;
 }
 
+//不能删除头结点
 template<typename T>
 bool LinkedList<T>::Erase(size_t pos, T& e)
 {
@@ -103,6 +112,7 @@ bool LinkedList<T>::Erase(size_t pos, T& e)
 	e = s->data;
 	p->pnext = s->pnext;
 	delete s;
+	//--length;
 	return true;
 }
 
@@ -166,4 +176,61 @@ int LinkedList<T>::Find(const T& e)
 		++i;
 	}
 	return -1;
+}
+
+template<typename T>
+void LinkedList<T>::Clear()
+{
+	size_t len = Length();
+	string str;
+	for (size_t i = 0; i < len; ++i) {
+		PopBack(str);
+	}
+}
+
+template<typename T>
+LinkedListNode<T>* LinkedList<T>::Head()
+{
+	return phead;
+}
+
+//单链表的反转需要三个结点指针：分别指向上一个，当前，下一个结点
+//首先让第一个结点的指针域为NULL
+//然后在循环里next=cur->next,cur->next->pre,这样就完成一次反转，接着++pre，++cur,
+//循环退出的条件是cur=NULL
+//最后将head->next=pre
+//反转不包括头结点
+template<typename T>
+void LinkedList<T>::reverse()
+{
+	if (Length() < 2) {
+		cout << "Length of LinkedList less than 2" << endl;
+		return;
+	}
+	LinkedListNode<T> *pre = phead->pnext, *cur = pre->pnext, *next;	
+
+	phead->pnext->pnext = nullptr;
+	while (cur) {
+		next = cur->pnext;
+		cur->pnext = pre;
+		pre = cur;
+		cur = next;
+	}
+	phead->pnext = pre;
+}
+
+template<typename T>
+LinkedListNode<T>* LinkedList<T>::recursive_reverse(LinkedListNode<T>* cur)
+{
+	//保证
+	if (!cur || !cur->pnext) {
+		return cur;
+	}
+	LinkedListNode<T> *last = recursive_reverse(cur->pnext);	//递归直到最后一个结点, 每一次都返回头结点
+	if (!last->pnext) {
+		phead->pnext = last;
+	}
+	cur->pnext->pnext = cur;	//让下一个结点指向当前结点
+	cur->pnext = nullptr;
+	return phead; 
 }
