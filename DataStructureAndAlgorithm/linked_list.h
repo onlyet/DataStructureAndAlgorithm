@@ -107,7 +107,7 @@ LinkedListNode<T>* LinkedList<T>::Locate(size_t pos)
 	}
 	int i = 0;	//第i个结点
 	LinkedListNode<T>* p = phead;
-	while (p && i < pos) {	//pos=0的时候返回头结点
+	while (p && i < pos) {	//pos=0的时候返回头结点,p指向第n个结点时i=n+1
 		p = p->pnext;
 		++i;
 	}
