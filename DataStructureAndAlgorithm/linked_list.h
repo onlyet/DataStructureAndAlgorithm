@@ -1,6 +1,7 @@
 #ifndef LINKED_LIST_H
 #define LINKED_LIST_H
 #endif // !LINKED_LIST_H
+#include<string>
 
 template<typename T>
 class ListBase{
@@ -51,13 +52,47 @@ public:
 	bool PopBack(T& e) { return Erase(Length(), e); }
 	bool PopFront(T& e) { return Erase(1, e); }
 
+	//void FrontCreate(T n) {}
+
+	template<typename T2>
+	void FrontCreate(T2 n) {}
+	template<>	//类模版的成员函数模版的特化
+	void FrontCreate(int n) {
+		for (int i = 0; i < n; ++i) {
+			LinkedListNode<T> *s = new LinkedListNode<T>;
+			s->pnext = phead->pnext;
+			phead->pnext = s;
+			s->data = i;
+		}
+	}
+	template<typename T2>
+	void BackCreate(T2 n) {}
+	template<>
+	void BackCreate(int n) {
+		LinkedListNode<T> *tail = phead;
+		for (int i = 0; i < n; ++i) {
+			LinkedListNode<T> *s = new LinkedListNode<T>;
+			s->data = i;
+			tail->pnext = s;
+			tail = s;
+		}
+	}
+
 	LinkedListNode<T>* Head();
-	//反转链表
-	void reverse();
+	//非递归反转链表,返回反转后链表的头结点
+	LinkedListNode<T>* reverse();
 	LinkedListNode<T>* recursive_reverse(LinkedListNode<T>* p);
 
 	//返回第pos个结点的指针，pos=0代表头结点
 	virtual LinkedListNode<T>* Locate(size_t pos);
+
+	//冒泡排序法，升序
+	void BubbleSort();
+	//返回倒数第k个结点，（一般不知道链表长度），采用相对位移
+	//第一个结点和第k个结点同时后移，当第k个结点走到最后一个结点时，第一个结点走到倒数第k个结点
+	LinkedListNode<T>* FindKLast(int k);
+	//删除倒数第k个结点
+	bool EraseKLast(int k, T &e);
 
 private:
 	LinkedListNode<T>* phead;
@@ -182,9 +217,9 @@ template<typename T>
 void LinkedList<T>::Clear()
 {
 	size_t len = Length();
-	string str;
+	T e;
 	for (size_t i = 0; i < len; ++i) {
-		PopBack(str);
+		PopBack(e);
 	}
 }
 
@@ -201,7 +236,7 @@ LinkedListNode<T>* LinkedList<T>::Head()
 //最后将head->next=pre
 //反转不包括头结点
 template<typename T>
-void LinkedList<T>::reverse()
+LinkedListNode<T>* LinkedList<T>::reverse()
 {
 	if (Length() < 2) {
 		cout << "Length of LinkedList less than 2" << endl;
@@ -217,20 +252,68 @@ void LinkedList<T>::reverse()
 		cur = next;
 	}
 	phead->pnext = pre;
+	return phead;
 }
 
 template<typename T>
 LinkedListNode<T>* LinkedList<T>::recursive_reverse(LinkedListNode<T>* cur)
 {
-	//保证
+	//cur->pnext=NULL是递归退出条件，并且保证链表结点>=2
 	if (!cur || !cur->pnext) {
 		return cur;
 	}
-	LinkedListNode<T> *last = recursive_reverse(cur->pnext);	//递归直到最后一个结点, 每一次都返回头结点
+	LinkedListNode<T> *last = recursive_reverse(cur->pnext);	//递归到最后一个结点
 	if (!last->pnext) {
-		phead->pnext = last;
+		phead->pnext = last; //让头结点指向反转后第一个结点（即反转前最后一个结点）
 	}
 	cur->pnext->pnext = cur;	//让下一个结点指向当前结点
 	cur->pnext = nullptr;
 	return phead; 
+}
+
+template<typename T>
+void LinkedList<T>::BubbleSort()
+{
+	int flag = Length() - 1;	//排序结束标志
+	while (flag) {
+		int unordered = flag;	//unordered表示无序区的末尾，即该下标之后的元素都是有序的
+		flag = 0;
+		LinkedListNode<T> *l = phead->pnext, *r = l->pnext;
+		for (int i = 0; i < unordered; ++i) {
+			if (r->data < l->data) {
+				swap(r->data, l->data);
+				flag = i;
+			}
+			l = l->pnext;
+			r = r->pnext;
+		}
+	}
+}
+
+template<typename T>
+LinkedListNode<T>* LinkedList<T>::FindKLast(int k)
+{
+	//int n = Length() - k + 1;
+	LinkedListNode<T> *cur = Locate(k);	//第k个结点
+	LinkedListNode<T> *klast = phead->pnext;	//第一个结点
+	while (cur->pnext) {
+		cur = cur->pnext;
+		klast = klast->pnext;
+	}
+	cout << "find the element in : "<< k << " last, data: " << klast->data << endl;
+	return klast;
+}
+
+template<typename T>
+bool LinkedList<T>::EraseKLast(int k, T& e)
+{
+	LinkedListNode<T> *p = FindKLast(k + 1);	//定位到倒数第k+1个结点
+	if (!p || !p->pnext) {
+		cout << "Erase() error" << endl;
+		return false;
+	}
+	LinkedListNode<T> *s = p->pnext;
+	e = p->pnext->data;
+	p->pnext = s->pnext;
+	delete s;
 }

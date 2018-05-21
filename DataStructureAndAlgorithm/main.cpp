@@ -12,6 +12,7 @@
 
 #include<iostream>
 #include<string>
+#include<time.h>
 
 using namespace std;
 
@@ -62,44 +63,79 @@ void sequence_list_test()
 
 void linked_list_test()
 {
-	LinkedList<string> l;
-	l.Insert(1, "hello");
-	l.Insert(2, "Micheal");
-	l.Insert(3, "!");
-	l.Print();
-	l.PushBack("what");
-	l.PushBack("the");
-	l.Print();
-	string s;
-	l.Erase(2, s);
-	cout << "erase node :" << s << endl;
-	l.Print();
-	l.PushFront("one");
-	l.Print();
-	l.PopFront(s);
-	cout << "erase node :" << s << endl;
-	l.Print();
-	l.PopBack(s);
-	l.Print();
-
-	cout << "the length = " << l.Length() << endl;
-	cout << "find string at " << l.Find("hello") << endl;
-	l.Get(3, s);
-	cout << "get string = " << s << endl;
-	l.Set(2, "auto");
-	l.Print();
-	//l.Clear();
-	//cout << l.Length() << endl;
-	//l.reverse();
+	//LinkedList<string> l;
+	//l.Insert(1, "hello");
+	//l.Insert(2, "Micheal");
+	//l.Insert(3, "!");
 	//l.Print();
-	l.recursive_reverse(l.Locate(1));
+	//l.PushBack("what");
+	//l.PushBack("the");
+	//l.Print();
+	//string s;
+	//l.Erase(2, s);
+	//cout << "erase node :" << s << endl;
+	//l.Print();
+	//l.PushFront("one");
+	//l.Print();
+	//l.PopFront(s);
+	//cout << "erase node :" << s << endl;
+	//l.Print();
+	//l.PopBack(s);
+	//l.Print();
+
+	//cout << "the length = " << l.Length() << endl;
+	//cout << "find string at " << l.Find("hello") << endl;
+	//l.Get(3, s);
+	//cout << "get string = " << s << endl;
+	//l.Set(2, "auto");
+	//l.Print();
+	////l.Clear();
+	////cout << l.Length() << endl;
+	////l.reverse();
+	////l.Print();
+	//l.recursive_reverse(l.Locate(1));
+	//l.Print();
+
+	LinkedList<int> l;
+	l.FrontCreate(5);
 	l.Print();
+	//LinkedList<int> l2;
+	//l2.BackCreate(10);
+	//l2.Print();
+	l.BubbleSort();
+	l.Print();
+	l.FindKLast(2);
 }
+
+//#define SORT_NUM 10
+//void sort_test()
+//{
+//	int a[SORT_NUM];
+//	srand((unsigned)time(NULL));
+//	for (int i = 0; i < SORT_NUM; ++i) {
+//		a[i] = rand() % 100;
+//	}
+//
+//	cout << "before sort:" << endl;
+//	for (auto &e : a) {
+//		cout << e << " ";
+//	}
+//	cout << endl;
+//	BubbleSort(a, SORT_NUM);
+//
+//	cout << "after sort:" << endl;
+//	for (auto &e : a) {
+//		cout << e << " ";
+//	}
+//	cout << endl;
+//}
 
 int main()
 {
 	
 	linked_list_test();
+
+	//sort_test();
 
 	system("pause");
 	return 0;
