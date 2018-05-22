@@ -81,7 +81,7 @@ public:
 	LinkedListNode<T>* Head();
 	//非递归反转链表,返回反转后链表的头结点
 	LinkedListNode<T>* reverse();
-	LinkedListNode<T>* recursive_reverse(LinkedListNode<T>* p);
+	LinkedListNode<T>* recursive_reverse(LinkedListNode<T>* cur);
 
 	//返回第pos个结点的指针，pos=0代表头结点
 	virtual LinkedListNode<T>* Locate(size_t pos);
@@ -93,7 +93,12 @@ public:
 	LinkedListNode<T>* FindKLast(int k);
 	//删除倒数第k个结点
 	bool EraseKLast(int k, T &e);
-
+	//倒序打印（使用递归）
+	void ReversePrint(LinkedListNode<T>* cur);
+	//不允许遍历，在pos位置之前插入结点
+	void InsertBefore(LinkedListNode<T>* pos, const T &e);
+	//约瑟夫环
+	LinkedListNode<T>* JosephCycle(size_t food);
 private:
 	LinkedListNode<T>* phead;
 	//size_t length;	//不用length也不影响
@@ -316,4 +321,46 @@ bool LinkedList<T>::EraseKLast(int k, T& e)
 	e = p->pnext->data;
 	p->pnext = s->pnext;
 	delete s;
+}
+
+template<typename T>
+void LinkedList<T>::ReversePrint(LinkedListNode<T>* cur)
+{
+	if (!cur || !cur->pnext) {
+		return;
+	}
+	ReversePrint(cur->pnext);
+	cout << cur->pnext->data << " ";
+	if (cur == phead) {
+		cout << endl;
+	}
+}
+
+template<typename T>
+void LinkedList<T>::InsertBefore(LinkedListNode<T>* pos, const T& e)
+{
+	//在pos之后插入结点，然后交换pos和s的data
+	LinkedListNode<T> *s = new LinkedListNode<T>;
+	s->pnext = pos->pnext;
+	pos->pnext = s;
+	s->data = pos->data;
+	pos->data = e;
+}
+
+template<typename T>
+LinkedListNode<T>* Merge(LinkedListNode<T>* lhs, LinkedListNode<T>* rhs)
+{
+	LinkedListNode<T> *p = lhs->pnext, *q = rhs->pnext;
+	LinkedListNode<T> *r = new LinkedListNode<T>, *last = r;
+	LinkedList<T>* l;
+
+	while (!p && !q) {
+		if (p < q) {
+			LinkedListNode<T> *s = new LinkedListNode<T>;
+			s->data = p->data;
+			last 
+		}
+
+	}
+
 }

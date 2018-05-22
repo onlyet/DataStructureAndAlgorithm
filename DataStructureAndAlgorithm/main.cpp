@@ -105,6 +105,12 @@ void linked_list_test()
 	l.BubbleSort();
 	l.Print();
 	l.FindKLast(2);
+	int i;
+	l.EraseKLast(3, i);
+	l.Print();
+	l.ReversePrint(l.Head());
+	l.InsertBefore(l.Locate(2), 119);
+	l.Print();
 }
 
 //#define SORT_NUM 10
