@@ -96,21 +96,30 @@ void linked_list_test()
 	//l.recursive_reverse(l.Locate(1));
 	//l.Print();
 
-	LinkedList<int> l;
-	l.FrontCreate(5);
+	//LinkedList<int> l;
+	//l.FrontCreate(5);
+	//l.Print();
+	////LinkedList<int> l2;
+	////l2.BackCreate(10);
+	////l2.Print();
+	//l.BubbleSort();
+	//l.Print();
+	//l.FindKLast(2);
+	//int i;
+	//l.EraseKLast(3, i);
+	//l.Print();
+	//l.ReversePrint(l.Head());
+	//l.InsertBefore(l.Locate(2), 119);
+	//l.Print();
+
+	LinkedList<int> l, r;
+	l.FrontCreate(30);
+	r.FrontCreate(20);
 	l.Print();
-	//LinkedList<int> l2;
-	//l2.BackCreate(10);
-	//l2.Print();
-	l.BubbleSort();
-	l.Print();
-	l.FindKLast(2);
-	int i;
-	l.EraseKLast(3, i);
-	l.Print();
-	l.ReversePrint(l.Head());
-	l.InsertBefore(l.Locate(2), 119);
-	l.Print();
+	r.Print();
+	LinkedListNode<int> *p = Merge(l.Head(), r.Head());
+
+	Print(p);
 }
 
 //#define SORT_NUM 10

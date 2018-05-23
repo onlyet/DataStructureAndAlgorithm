@@ -99,6 +99,9 @@ public:
 	void InsertBefore(LinkedListNode<T>* pos, const T &e);
 	//约瑟夫环
 	LinkedListNode<T>* JosephCycle(size_t food);
+	//找到中间结点
+	LinkedListNode<T>* FindMiddle();
+
 private:
 	LinkedListNode<T>* phead;
 	//size_t length;	//不用length也不影响
@@ -347,20 +350,65 @@ void LinkedList<T>::InsertBefore(LinkedListNode<T>* pos, const T& e)
 	pos->data = e;
 }
 
+//合并两个升序的单链表，合并后依然升序
 template<typename T>
 LinkedListNode<T>* Merge(LinkedListNode<T>* lhs, LinkedListNode<T>* rhs)
 {
 	LinkedListNode<T> *p = lhs->pnext, *q = rhs->pnext;
-	LinkedListNode<T> *r = new LinkedListNode<T>, *last = r;
-	LinkedList<T>* l;
+	LinkedList<T> *l = new LinkedList<T>;
+	LinkedListNode<T> *last = l->Head();
 
-	while (!p && !q) {
-		if (p < q) {
-			LinkedListNode<T> *s = new LinkedListNode<T>;
+	while (p && q) {
+		LinkedListNode<T> *s = new LinkedListNode<T>;
+		if (p->data < q->data) {
 			s->data = p->data;
-			last 
+			p = p->pnext;
 		}
-
+		else {
+			s->data = q->data;
+			q = q->pnext;
+		}
+		last->pnext = s;
+		last = s;
+	}
+	while (p) {
+		LinkedListNode<T> *s = new LinkedListNode<T>;
+		s->data = p->data;
+		p = p->pnext;
+		last->pnext = s;
+		last = s;
+	}
+	while (q) {
+		LinkedListNode<T> *s = new LinkedListNode<T>;
+		s->data = q->data;
+		q = q->pnext;
+		last->pnext = s;
+		last = s;
 	}
 
+	return l->Head();
+}
+
+template<typename T>
+void Print(LinkedListNode<T>* p)
+{
+	if (!p || !p->pnext) {
+		return;
+	}
+	while (p->pnext) {
+		cout << p->pnext->data << " ";
+		p = p->pnext;
+	}
+	cout << endl;
+}
+
+template<typename T>
+LinkedListNode<T>* LinkedList<T>::FindMiddle()
+{
+	LinkedListNode<T> *fast = phead, *slow = phead;
+	while (fast && fast->pnext) {
+		slow = slow->pnext;
+		fast = fast->pnext->pnext;
+	}
+	return slow;
 }
