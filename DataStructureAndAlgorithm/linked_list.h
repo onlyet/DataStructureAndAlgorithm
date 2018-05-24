@@ -98,10 +98,16 @@ public:
 	//不允许遍历，在pos位置之前插入结点
 	void InsertBefore(LinkedListNode<T>* pos, const T &e);
 	//约瑟夫环
-	LinkedListNode<T>* JosephCycle(size_t food);
+	LinkedListNode<T>* JosephCircle(size_t food);
 	//找到中间结点
 	LinkedListNode<T>* FindMiddle();
-
+	//判断是否有环，有环则返回快慢指针的相遇点
+	LinkedListNode<T>* GetCircleMeetNode();
+	//如果链表有环，求环的长度，传入参数：相遇点
+	size_t CircleLen(LinkedListNode<T> *meet_point);
+	//如果链表有环，求环的入口点，传入参数：相遇点
+	LinkedListNode<T>* GetCircleEntryNode(LinkedListNode<T> *meet_point);
+	
 private:
 	LinkedListNode<T>* phead;
 	//size_t length;	//不用length也不影响
@@ -389,6 +395,7 @@ LinkedListNode<T>* Merge(LinkedListNode<T>* lhs, LinkedListNode<T>* rhs)
 	return l->Head();
 }
 
+//打印某链表的元素
 template<typename T>
 void Print(LinkedListNode<T>* p)
 {
@@ -402,13 +409,146 @@ void Print(LinkedListNode<T>* p)
 	cout << endl;
 }
 
+//如果有环不就无限循环了？ 
 template<typename T>
 LinkedListNode<T>* LinkedList<T>::FindMiddle()
 {
+	if (!phead || !phead->pnext) {
+		return nullptr;
+	}
 	LinkedListNode<T> *fast = phead, *slow = phead;
 	while (fast && fast->pnext) {
 		slow = slow->pnext;
 		fast = fast->pnext->pnext;
 	}
 	return slow;
+}
+
+template<typename T>
+LinkedListNode<T>* LinkedList<T>::GetCircleMeetNode()
+{
+	LinkedListNode<T> *fast = phead->pnext, *slow = phead->pnext;
+	while (fast && fast->pnext) {	//快指针最多只能走到倒数第二个结点，如果是倒数第一个结点，则fast->pnext->pnext会出现空指针解引用
+		fast = fast->pnext->pnext;
+		slow = slow->pnext;
+		if (fast == slow) {
+		    return fast;
+		}
+	}
+	return nullptr;
+}
+
+template<typename T>
+size_t LinkedList<T>::CircleLen(LinkedListNode<T> *meet_point)
+{
+	if (!meet_point) {
+		return 0;
+	}
+	size_t cnt = 1;
+	LinkedListNode<T> *cur = meet_point->pnext;
+	while (cur != meet_point) {
+		++cnt;
+		cur = cur->pnext;
+	}
+	return cnt;
+}
+
+template<typename T>
+LinkedListNode<T>* LinkedList<T>::GetCircleEntryNode(LinkedListNode<T> *meet_point)
+{
+	if (!meet_point) {
+		return nullptr;
+	}
+	LinkedListNode<T> *p = phead->pnext;	//从第一个结点开始
+	LinkedListNode<T> *q = meet_point;		//从相遇点开始
+	while (p) {
+		p = p->pnext;
+		q = q->pnext;
+		if (p == q) {
+			return p;	//当p，q相遇的时候，该点就是入口点
+		}
+	}
+}
+
+//判断两无环单链表是否有交点
+//如果有链表是有环的，那将陷入死循环
+template<typename T>
+bool HasCrossNode(LinkedListNode<T> *l, LinkedListNode<T> *r)
+{
+	if (!l || !r || !l->pnext || !r->pnext) {
+		return false;
+	}
+	LinkedListNode<T> *p = l->pnext, *q = r->pnext;
+	while (p->pnext) {
+		p = p->pnext;
+	}
+	while (q->pnext) {
+		q = q->pnext;
+	}
+	if (p == q) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+//返回两无环单链表的交点
+//转化成求有环单链表的入口点，这种方法时间复杂度好像太高了？
+template<typename T>
+LinkedListNode<T> *GetCrossNode(LinkedList<T> *l, LinkedList<T> *r)
+{
+	//如果存在链表是有环的，则不能用该函数确定交点
+	if (l->GetCircleMeetNode() || r->GetCircleMeetNode()) {
+		return nullptr;
+	}
+	//判断是否有交点（适用于两无环单链表）
+	if (!HasCrossNode(l->Head(), r->Head())) {
+		return nullptr;
+	}
+	LinkedListNode<T> *p = l->pnext;
+	while (p->pnext) {
+		p = p->pnext;	//遍历到最后一个结点
+	}
+	p->pnext = l->pnext;	//让链表l尾首相连，成环
+
+	//获得新环的相遇点
+	LinkedListNode<T> *meet_node = r->GetCircleMeetNode();
+	if (!meet_node) {
+		p->pnext = nullptr;	//断开链表l的环
+		return nullptr;
+	}
+
+	p->pnext = nullptr;	
+	return r->GetCircleEntryNode(meet_node);		//获得新环的入口点，即两无环单链表的交点
+}
+
+//判断两有环单链表是否有交点
+//两个有环单链表有交点，则它们共环，则问题转化为：判断表l环上任意一点是否在表r环上
+template<typename T>
+bool CircleHasCrossNode(LinkedList<T> *l, LinkedList<T> *r)
+{
+	LinkedListNode<T> *l_meet_node = l->GetCircleMeetNode();
+	LinkedListNode<T> *r_meet_node = r->GetCircleMeetNode();
+	if (!l_meet_node || !r_meet_node) {
+		return false;
+	}
+	if (l_meet_node == r_meet_node) {
+		return true;
+	}
+	LinkedListNode<T> *p = l_meet_node->pnext;
+	while (p != l_meet_node) {
+		if (p == r_meet_node) {
+			return true;
+		}
+		p = p->pnext;
+	}
+	return false;
+}
+
+//返回两有环单链表的交点
+template<typename T>
+LinkedListNode<T> *CircleGetCrossNode()
+{
+
 }
