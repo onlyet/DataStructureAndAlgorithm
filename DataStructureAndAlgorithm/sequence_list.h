@@ -7,7 +7,7 @@ class SequenceList {
 public:
 	//enum intCode{OK,ERROR};
 public:
-	SequenceList() : data(new T[LIST_INIT_SIZE * sizeof(T)]), listsize(LIST_INIT_SIZE), length(0) {}
+	SequenceList() : data(new T[LIST_INIT_SIZE * sizeof(T)]), stack_size(LIST_INIT_SIZE), length(0) {}
 	~SequenceList() { if (data) { delete[] data; data = nullptr; } }
 
 	////初始化
@@ -35,7 +35,7 @@ public:
 private:
 	T* data;
 	size_t length;	//当前长度
-	size_t listsize; //当前分配空间容量
+	size_t stack_size; //当前分配空间容量
 	//static const int MAX_SIZE = 30;
 };
 
@@ -43,7 +43,7 @@ private:
 //void SequenceList<T>::Init()
 //{
 //	data = new T[LIST_INIT_SIZE];
-//	listsize = LIST_INIT_SIZE;
+//	stack_size = LIST_INIT_SIZE;
 //}
 
 template<typename T>
@@ -52,7 +52,7 @@ void SequenceList<T>::Clear()
 	cout << "Clear()" << endl;
 	delete[] data;
 	data = new T[LIST_INIT_SIZE];
-	listsize = LIST_INIT_SIZE;
+	stack_size = LIST_INIT_SIZE;
 	length = 0;
 }
 
@@ -62,7 +62,7 @@ void SequenceList<T>::Destory()
 	cout << "Destory()" << endl;
 	delete[] data;
 	data = nullptr;	//delete一定要设nullptr，否则会不小心释放两次引起的未定义行为
-	length = listsize = 0;
+	length = stack_size = 0;
 }
 
 
@@ -109,12 +109,12 @@ void SequenceList<T>::Insert(size_t pos, const T& e)
 		cout << "pos out of range" << endl;
 		return;
 	}
-	if (listsize == length) {
-		T* tmp = new T[listsize + LIST_INCREMENT_SIZE];
+	if (stack_size == length) {
+		T* tmp = new T[stack_size + LIST_INCREMENT_SIZE];
 		memcpy(tmp, data, length * sizeof(T));
 		delete[] data;
 		data = tmp;
-		listsize += LIST_INCREMENT_SIZE;
+		stack_size += LIST_INCREMENT_SIZE;
 	}
 	for (int cur = length; cur >= pos; --cur) {
 		data[cur] = data[cur - 1];
@@ -126,7 +126,7 @@ void SequenceList<T>::Insert(size_t pos, const T& e)
 template<typename T>
 void SequenceList<T>::Erase(size_t pos)
 {
-	size_t i = pos - 1;	//同一使用下标方便理解
+	size_t i = pos - 1;	//统一使用下标方便理解
 	if (0 > i || i > length - 1) {
 		cout << "pos out of range" << endl;
 		return;

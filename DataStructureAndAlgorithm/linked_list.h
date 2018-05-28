@@ -97,6 +97,8 @@ public:
 	void ReversePrint(LinkedListNode<T>* cur);
 	//不允许遍历，在pos位置之前插入结点
 	void InsertBefore(LinkedListNode<T>* pos, const T &e);
+	//不允许遍历，删除第n个结点
+	void EraseN(LinkedListNode<T> *pos, const T &e);
 	//约瑟夫环
 	LinkedListNode<T>* JosephCircle(size_t food);
 	//找到中间结点
@@ -356,6 +358,16 @@ void LinkedList<T>::InsertBefore(LinkedListNode<T>* pos, const T& e)
 	pos->data = e;
 }
 
+template<typename T>
+void LinkedList<T>::EraseN(LinkedListNode<T>* pos, const T& e)
+{
+	e = pos->data;
+	pos->data = pos->pnext->data;
+	LinkedListNode<T> *s = pos->pnext;
+	pos->pnext = s->pnext;
+	delete s;
+}
+
 //合并两个升序的单链表，合并后依然升序
 template<typename T>
 LinkedListNode<T>* Merge(LinkedListNode<T>* lhs, LinkedListNode<T>* rhs)
@@ -548,7 +560,43 @@ bool CircleHasCrossNode(LinkedList<T> *l, LinkedList<T> *r)
 
 //返回两有环单链表的交点
 template<typename T>
-LinkedListNode<T> *CircleGetCrossNode()
+bool CircleGetFirstCrossNode(LinkedList<T> *l, LinkedList<T> *r, LinkedListNode<T> *pn)
 {
-
+	LinkedListNode<T> *l_meet_node = l->GetCircleMeetNode();
+	LinkedListNode<T> *r_meet_node = r->GetCircleMeetNode();
+	if (!l_meet_node || !r_meet_node) {
+		return false;
+	}
+	if (!CircleHasCrossNode(l, r)) {
+		return false;
+	}
+	LinkedListNode<T> *p = l->Head()->pnext;
+	LinkedListNode<T> *q = r->Head()->pnext;
+	size_t l_len = 1, r_len = 1;
+	while (p != l_meet_node) {
+		p = p->pnext;
+		++l_len;
+	}
+	while (q != r_meet_node) {
+		q = q->pnext;
+		++r_len;
+	}
+	p = l->Head()->pnext;
+	q = r->Head()->pnext;
+	if (l_len < r_len) {
+		for (size_t i = 0; i < r_len - l_len; ++i) {
+			p = p->pnext;
+		}
+	}
+	else {
+		for (size_t i = 0; i < l_len - r_len; ++i) {
+			q = q->pnext;
+		}
+	}
+	while (p != q) {
+		p = p->pnext;
+		q = q->pnext;
+	}
+	pn = p;
+	return true;
 }

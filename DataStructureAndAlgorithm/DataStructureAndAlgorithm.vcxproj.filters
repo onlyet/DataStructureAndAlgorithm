@@ -24,6 +24,12 @@
     <ClInclude Include="linked_list.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="sequence_stack.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="link_stack.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DoubleLinkedList.cpp">

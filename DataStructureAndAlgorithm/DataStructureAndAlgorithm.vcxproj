@@ -112,7 +112,9 @@
   <ItemGroup>
     <ClInclude Include="DoubleLinkedList.h" />
     <ClInclude Include="linked_list.h" />
+    <ClInclude Include="link_stack.h" />
     <ClInclude Include="sequence_list.h" />
+    <ClInclude Include="sequence_stack.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DoubleLinkedList.cpp" />
