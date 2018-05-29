@@ -1,6 +1,6 @@
 #pragma once
-#ifndef LINK_STACK_H
-#define LINK_STACK_H
+#ifndef LinkStack_H
+#define LinkStack_H
 #include"sequence_stack.h"
 
 template<typename T>
@@ -11,10 +11,10 @@ struct LinkStackNode {
 };
 
 template<typename T>
-class LINK_STACK : public StackBase<T> {
+class LinkStack : public StackBase<T> {
 public:
-	LINK_STACK() : top(nullptr), len(0) {}
-	~LINK_STACK() {}
+	LinkStack() : top(nullptr), len(0) {}
+	~LinkStack();
 	bool Push(const T &e);
 	bool Pop(T &e);
 private:
@@ -23,7 +23,7 @@ private:
 };
 
 template<typename T>
-bool LINK_STACK<T>::Push(const T & e)
+bool LinkStack<T>::Push(const T & e)
 {
 	LinkStackNode<T> *s = new LinkStackNode<T>;
 	if (!s) {
@@ -37,7 +37,7 @@ bool LINK_STACK<T>::Push(const T & e)
 }
 
 template<typename T>
-bool LINK_STACK<T>::Pop(T & e)
+bool LinkStack<T>::Pop(T & e)
 {
 	if (nullptr == top) {
 		return false;
@@ -52,4 +52,4 @@ bool LINK_STACK<T>::Pop(T & e)
 
 
 
-#endif // !LINK_STACK_H
+#endif // !LinkStack_H
