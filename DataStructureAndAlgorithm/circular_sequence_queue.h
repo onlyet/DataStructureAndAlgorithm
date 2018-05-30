@@ -6,7 +6,7 @@
 template<typename T>
 class CircularSeqQueue {
 public:
-	CircularSeqQueue() : data(new T[QueueInitSize * sizeof(T)]), front(0), rear(0), queue_size(QueueInitSize) {}
+	CircularSeqQueue() : data(new T[QueueInitSize]), front(0), rear(0), queue_size(QueueInitSize) {}
 	~CircularSeqQueue() { delete[] data; data(nullptr); front = rear = queue_size = 0; }
 	bool EnQueue(const T &e);
 	bool DeQueue(T &e);

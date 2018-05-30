@@ -3,6 +3,7 @@
 #define STACK_QUEUE_INTERVIEW_H
 #include<stack>
 #include<queue>
+#include<time.h>
 
 template<typename T>
 class Stack {
@@ -127,5 +128,123 @@ private:
 	std::queue<T> q_out;	//to Pop
 };
 
+//verify that pop and push of stack is logical or not
+template<typename T>
+class StackVerifyPopLogic {
+public:
+	void Input()
+	{
+		v_in = { 1,2,3,4,5 };
+		v_out = { 1,3,5,2,4 };
+	}
+	void Output()
+	{
+		cout << "the elements left in stack:" << endl;
+		while (!s.empty()) {
+			cout << s.top() << " ";
+			s.pop();
+		}
+		cout << endl;
+	}
+	bool Logical()
+	{
+		if (v_in.size() != v_out.size() || v_in.empty()) {
+			return false;
+		}
+		int i = 0, j = 0;
+		while (i < v_in.size()) {
+			if (v_in[i] != v_out[j]) {
+				s.push(v_in[i]);
+				++i;
+			}
+			else {
+				++i;
+				++j;
+			}
+		}
+		//whenj < v_out.size(), s must not empty, so needn't !s.empty() 
+		while (j < v_out.size()) {
+			if (v_out[j] != s.top()) {
+				return false;
+			}
+			s.pop();
+			++j;
+		}
+		return true;
+	}
+private:
+	std::vector<T> v_in;
+	std::vector<T> v_out;
+	std::stack<T> s;
+};
+
+//achieve two stacks using a array
+template<typename T>
+class TwoStackWithArray {
+public:
+	TwoStackWithArray() : capacity(CAPACITY_INIT_SIZE), data(new T[capacity]), first_top(-1), second_top(capacity),  {}
+	~TwoStackWithArray() { delete[] data; data(nullptr); }
+
+	void PushFirst(const T &e)
+	{
+		CheckCapacity();
+		data[++first_top] = e;
+	}
+	void PushSecond()
+	{
+		CheckCapacity();
+		data[--second_top] = e;
+	}
+	void PopFirst()
+	{
+		if (-1 == first_top) {
+			return;
+		}
+		--first_top;
+	}
+	void PopSecond()
+	{
+		if (capacity == second_top) {
+			return;
+		}
+		++second_top;
+	}
+	const T& TopFirst()
+	{
+		assert(-1 < first_top);
+		return data[first_top];
+	}
+	const T& TopSecond()
+	{
+		assert(capacity > second_top);
+		return data[second_top];
+	}
+	bool EmptyFirst() { return -1 == first_top; }
+	bool EmptySecond() { return capacity == second_top; }
+	size_t LengthFirst() { return first_top + 1; }
+	size_t LengthSecond() { return capacity - second_top; }
+private:
+	//be careful to singly copy stack1 and stack2 to new data memory
+	void CheckCapacity()
+	{
+		if (first_top + 1 == second_top) {
+			T *new_data = new T[2 * capapcity];
+			assert(nullptr != new_data);
+			memcpy(new_data, data, (first_top + 1) * sizeof(T));	//copy first stack
+			memcpy(new_data + capacity + second_top, data + second_top, (capacity - second_top) * sizeof(T));	//copy second stack
+			delete[] data;
+			data = new_data;
+			capacity *= 2;
+			second_top += capacity;
+		}
+	}
+public:
+	static const size_t CAPACITY_INIT_SIZE = 200;
+private:
+	T *data;
+	int first_top;
+	int second_top;
+	size_t capacity;
+};
 
 #endif // !STACK_QUEUE_INTERVIEW_H

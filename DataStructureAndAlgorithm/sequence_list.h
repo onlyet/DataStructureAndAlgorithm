@@ -7,7 +7,7 @@ class SequenceList {
 public:
 	//enum intCode{OK,ERROR};
 public:
-	SequenceList() : data(new T[LIST_INIT_SIZE * sizeof(T)]), stack_size(LIST_INIT_SIZE), length(0) {}
+	SequenceList() : data(new T[LIST_INIT_SIZE]), stack_size(LIST_INIT_SIZE), length(0) {}
 	~SequenceList() { if (data) { delete[] data; data = nullptr; } }
 
 	////初始化

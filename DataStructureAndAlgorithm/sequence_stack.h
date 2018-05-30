@@ -21,7 +21,7 @@ public:
 template<typename T>
 class SeqStack : public StackBase<T>{
 public:
-	SeqStack() : data(new T[STACK_INIT_SIZE * sizeof(T)]), top(-1), stack_size(STACK_INIT_SIZE) {}
+	SeqStack() : data(new T[STACK_INIT_SIZE]), top(-1), stack_size(STACK_INIT_SIZE) {}
 	~SeqStack() { delete[] data; }
 	void Clear() override;
 	bool Empty() override { return -1 == top; }

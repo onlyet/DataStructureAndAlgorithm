@@ -9,10 +9,12 @@
 #include"sequence_list.h"
 //#include"sequence_list.cpp"
 #include"linked_list.h"
+#include"stack_queue_interview.h"
 
 #include<iostream>
 #include<string>
 #include<time.h>
+
 
 using namespace std;
 
@@ -145,12 +147,22 @@ void linked_list_test()
 //	cout << endl;
 //}
 
+void verify_pop_logic()
+{
+	StackVerifyPopLogic<int> s;
+	s.Input();
+	cout << "logic: " << s.Logical() << endl;
+	s.Output();
+}
+
 int main()
 {
 	
-	linked_list_test();
+	//linked_list_test();
 
 	//sort_test();
+
+	verify_pop_logic();
 
 	system("pause");
 	return 0;
