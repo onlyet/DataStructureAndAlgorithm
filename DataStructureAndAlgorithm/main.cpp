@@ -10,6 +10,7 @@
 //#include"sequence_list.cpp"
 #include"linked_list.h"
 #include"stack_queue_interview.h"
+#include"binary_tree.h"
 
 #include<iostream>
 #include<string>
@@ -155,15 +156,25 @@ void verify_pop_logic()
 	s.Output();
 }
 
+
+
 int main()
 {
 	
-	//linked_list_test();
+	try {
+		//linked_list_test();
 
-	//sort_test();
+		//sort_test();
 
-	verify_pop_logic();
+		//verify_pop_logic();
 
-	system("pause");
+		BinaryTree<int> bt;
+		bt.Create(bt.Root());
+
+		system("pause");
+	}
+	catch (std::exception &e) {
+		cout << e.what() << endl;
+	}
 	return 0;
 }
