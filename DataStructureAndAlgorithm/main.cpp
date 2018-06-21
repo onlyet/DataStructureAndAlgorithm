@@ -156,7 +156,37 @@ void verify_pop_logic()
 	s.Output();
 }
 
+void binary_tree_test()
+{
+	//int a[10] = { 1,2,3,'#','#',4,'#','#',5,6 };
+	int a[10] = { 1, '#', 2 };
+	BinaryTree<int> b(a, 10, '#');
+	cout << "preorder: ";
+	b.PreorderTraversal();
+	cout << endl;
+	cout << "inorder: ";
+	b.InorderTraversal();
+	cout << endl;
+	cout << "postorder: ";
+	b.PostoederTraversal();
+	cout << endl;
+	cout << "level traversal: ";
+	b.LevelTraversal();
+	cout << endl;
+	cout << "num of nude: " << b.Size() << endl;
+	cout << "depth: " << b.Depth() << endl;
+	cout << "num of leaf: " << b.LeafSize() << endl;
 
+	cout << "non recursive preorder: ";
+	b.NonRecursivePreorder();
+	cout << endl;
+	cout << "non recursive inorder: ";
+	b.NonRecursiveInorder();
+	cout << endl;
+	cout << "non recursive postorder: ";
+	b.NonRecursivePostorder();
+	cout << endl;
+}
 
 int main()
 {
@@ -168,8 +198,7 @@ int main()
 
 		//verify_pop_logic();
 
-		BinaryTree<int> bt;
-		bt.Create(bt.Root());
+		binary_tree_test();
 
 		system("pause");
 	}
