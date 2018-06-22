@@ -103,6 +103,7 @@ public:
 		LevelTraversal_(m_root);
 	}
 
+	//时间复杂度：O(n),空间复杂度：O(n)
 	void NonRecursivePreorder()
 	{
 		std::stack<BiTree<T>> s;
@@ -123,6 +124,26 @@ public:
 		}
 	}
 
+	//时间复杂度：O(n),空间复杂度：O(n)
+	void NonRecursivePreprder_v2()
+	{
+		std::stack<BiTree<T>> s;
+		BiTree<T> cur = m_root;
+		while (nullptr != cur || !s.empty()) {
+			while (nullptr != cur) {
+				cout << cur->data << "->";
+				s.push(cur);
+				cur = cur->lchild;
+			}
+			//if (!s.empty()) {
+				cur = s.top();
+				s.pop();
+				cur = cur->rchild;
+			//}
+		}
+	}
+
+	//时间复杂度的：O(n),空间复杂度：O(n)
 	void NonRecursiveInorder()
 	{
 		std::stack<BiTree<T>> s;
@@ -132,14 +153,72 @@ public:
 				s.push(cur);
 				cur = cur->lchild;
 			}
-			if (!s.empty()) {
+			//if (!s.empty()) {
 				cur = s.top();	//在打印当前结点后，还要访问该结点的右子树
 				cout << cur->data << "->";
 				s.pop();
 				cur = cur->rchild;
-			}
+			//}
 		}
 
+	}
+
+	//时间复杂度的：O(n),空间复杂度：O(1)
+	//该方法没有恢复叶子结点的孩子为nullptr，导致在递归destory的时候，叶子结点被double delete
+	void NonRecursivePreorder_O1()
+	{
+		BiTree<T> pre, cur = m_root;
+		while (nullptr != cur) {
+			cout << cur->data << "->";
+			if (nullptr == cur->lchild) {
+				cur = cur->rchild;
+			}
+			else {
+				pre = cur->lchild;
+				while (nullptr != pre->rchild && pre->rchild != cur->rchild) {
+					pre = pre->rchild;
+				}
+				if (nullptr == pre->rchild) {
+					pre->rchild = cur->rchild;
+					cur = cur->lchild;
+				}
+				else {
+					pre->rchild = nullptr;
+					cout << cur->rchild->data << "->";
+					cur = cur->rchild;
+				}
+			}
+		}
+	}
+
+	//时间复杂度的：O(n),空间复杂度：O(1)
+	void NonRecursiveInorder_O1()
+	{
+		BiTree<T> pre, cur = m_root;
+		while (nullptr != cur) {
+			if (nullptr == cur->lchild) {
+				cout << cur->data << "->";
+				cur = cur->rchild;
+			}
+			else {
+				pre = cur->lchild;
+				//找到cur的前驱结点
+				while (nullptr != pre->rchild && pre->rchild != cur) {
+					pre = pre->rchild;
+				}
+				//将pre的右孩子指向cur
+				if (nullptr == pre->rchild) {
+					pre->rchild = cur;
+					cur = cur->lchild;
+				}
+				//恢复pre的右孩子为nullptr
+				else {
+					pre->rchild = nullptr;
+					cout << cur->data << "->";
+					cur = cur->rchild;
+				}
+			}
+		}
 	}
 
 	void NonRecursivePostorder()
@@ -153,7 +232,7 @@ public:
 		s.push(m_root);
 		while (!s.empty()) {
 			cur = s.top();
-			//如果该结点的左右孩子结点都为nullptr，或者该结点的孩子结点已经遍历过，则输出该结点
+			//如果该结点的左右孩子结点都为nullptr，或者该结点的孩子结点已经访问过，则访问该结点
 			if ((nullptr == cur->lchild && nullptr == cur->rchild) || 
 				(nullptr != pre && (pre == cur->lchild || pre == cur->rchild))) {
 				cout << cur->data << "->";

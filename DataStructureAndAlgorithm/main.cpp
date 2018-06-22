@@ -158,8 +158,8 @@ void verify_pop_logic()
 
 void binary_tree_test()
 {
-	//int a[10] = { 1,2,3,'#','#',4,'#','#',5,6 };
-	int a[10] = { 1, '#', 2 };
+	int a[10] = { 1,2,3,'#','#',4,'#','#',5,6 };
+	//int a[10] = { 1, '#', 2 };
 	BinaryTree<int> b(a, 10, '#');
 	cout << "preorder: ";
 	b.PreorderTraversal();
@@ -186,6 +186,18 @@ void binary_tree_test()
 	cout << "non recursive postorder: ";
 	b.NonRecursivePostorder();
 	cout << endl;
+
+	cout << "non recursive preorder v2: ";
+	b.NonRecursivePreprder_v2();
+	cout << endl;
+
+	cout << "non recursive preorder space complexity O(1): ";
+	b.NonRecursivePreorder_O1();
+	cout << endl;
+	//cout << "non recursive inorder space complexity O(1): ";
+	//b.NonRecursiveInorder_O1();
+	//cout << endl;
+
 }
 
 int main()
