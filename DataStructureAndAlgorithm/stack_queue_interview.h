@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #ifndef STACK_QUEUE_INTERVIEW_H
 #define STACK_QUEUE_INTERVIEW_H
 #include<stack>

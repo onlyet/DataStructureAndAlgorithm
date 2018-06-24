@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #ifndef BINARY_TREE_H
 #define BINARY_TREE_H
 //#include<iostream>
@@ -163,28 +163,58 @@ public:
 
 	}
 
+	//时间复杂度的：O(n),空间复杂度：O(n)
+	void NonRecursivePostorder()
+	{
+		std::stack<BiTree<T>> s;
+		BiTree<T> cur;
+		BiTree<T> pre = nullptr;
+		if (nullptr == m_root) {
+			return;
+		}
+		s.push(m_root);
+		while (!s.empty()) {
+			cur = s.top();
+			//如果该结点的左右孩子结点都为nullptr，或者该结点的孩子结点已经访问过，则访问该结点
+			if ((nullptr == cur->lchild && nullptr == cur->rchild) ||
+				(nullptr != pre && (pre == cur->lchild || pre == cur->rchild))) {
+				cout << cur->data << "->";
+				s.pop();
+				pre = cur;
+			}
+			//否则，先将右结点压栈，再将左结点压栈
+			else {
+				if (nullptr != cur->rchild) {
+					s.push(cur->rchild);
+				}
+				if (nullptr != cur->lchild) {
+					s.push(cur->lchild);
+				}
+			}
+		}
+	}
+
 	//时间复杂度的：O(n),空间复杂度：O(1)
-	//该方法没有恢复叶子结点的孩子为nullptr，导致在递归destory的时候，叶子结点被double delete
 	void NonRecursivePreorder_O1()
 	{
 		BiTree<T> pre, cur = m_root;
 		while (nullptr != cur) {
-			cout << cur->data << "->";
 			if (nullptr == cur->lchild) {
+				cout << cur->data << "->";
 				cur = cur->rchild;
 			}
 			else {
 				pre = cur->lchild;
-				while (nullptr != pre->rchild && pre->rchild != cur->rchild) {
+				while (nullptr != pre->rchild && pre->rchild != cur) {
 					pre = pre->rchild;
 				}
 				if (nullptr == pre->rchild) {
-					pre->rchild = cur->rchild;
+					cout << cur->data << "->";
+					pre->rchild = cur;
 					cur = cur->lchild;
 				}
 				else {
 					pre->rchild = nullptr;
-					cout << cur->rchild->data << "->";
 					cur = cur->rchild;
 				}
 			}
@@ -216,36 +246,6 @@ public:
 					pre->rchild = nullptr;
 					cout << cur->data << "->";
 					cur = cur->rchild;
-				}
-			}
-		}
-	}
-
-	void NonRecursivePostorder()
-	{
-		std::stack<BiTree<T>> s;
-		BiTree<T> cur;
-		BiTree<T> pre = nullptr;
-		if (nullptr == m_root) {
-			return;
-		}
-		s.push(m_root);
-		while (!s.empty()) {
-			cur = s.top();
-			//如果该结点的左右孩子结点都为nullptr，或者该结点的孩子结点已经访问过，则访问该结点
-			if ((nullptr == cur->lchild && nullptr == cur->rchild) || 
-				(nullptr != pre && (pre == cur->lchild || pre == cur->rchild))) {
-				cout << cur->data << "->";
-				s.pop();
-				pre = cur;
-			}
-			//否则，先将右结点压栈，再将左结点压栈
-			else {
-				if (nullptr != cur->rchild) {
-					s.push(cur->rchild);
-				}
-				if (nullptr != cur->lchild) {
-					s.push(cur->lchild);
 				}
 			}
 		}

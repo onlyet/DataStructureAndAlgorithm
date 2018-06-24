@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #ifndef SEQUENCE_STACK_H
 #define SEQUENCE_STACK_H
 

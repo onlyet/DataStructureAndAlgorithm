@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #ifndef CIRCULAR_SEQUENCE_QUEUE_H
 #define CIRCULAR_SEQUENCE_QUEUE_H
 

@@ -1,4 +1,4 @@
-//#pragma once
+﻿//#pragma once
 //
 ///* Double circle linked list */
 //template<typename T>

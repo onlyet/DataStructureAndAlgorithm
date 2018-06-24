@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #ifndef LinkStack_H
 #define LinkStack_H
 #include"sequence_stack.h"

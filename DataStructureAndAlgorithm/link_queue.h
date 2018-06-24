@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #ifndef LINK_QUEUE_H
 #define LINK_QUEUE_H
 
