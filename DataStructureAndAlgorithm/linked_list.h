@@ -440,7 +440,7 @@ template<typename T>
 LinkedListNode<T>* LinkedList<T>::GetCircleMeetNode()
 {
 	LinkedListNode<T> *fast = phead->pnext, *slow = phead->pnext;
-	while (fast && fast->pnext) {	//快指针最多只能走到倒数第二个结点，如果是倒数第一个结点，则fast->pnext->pnext会出现空指针解引用
+	while (fast && fast->pnext) {	//快指针必须保证fast->pnext!=null, 否则fast->pnext->pnext会导致解引用空指针
 		fast = fast->pnext->pnext;
 		slow = slow->pnext;
 		if (fast == slow) {
