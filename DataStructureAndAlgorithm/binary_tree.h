@@ -24,6 +24,7 @@ using BiTree = BinaryTreeNode<T>*;
 template<typename T>
 class BinaryTree {
 public:
+	void Destroy() { Destroy(&m_root); }
 	BinaryTree() : m_root(nullptr) {}
 	BinaryTree(const T *a, size_t sz, const T &invalid)
 	{
@@ -37,12 +38,12 @@ public:
 	BinaryTree& operator=(const BinaryTree &rhs)
 	{
 		if (this != &rhs) {
-			Destory(m_root);
+			Destroy(&m_root);
 			m_root = Copy(rhs->m_root);
 		}
 		return *this;
 	}
-	~BinaryTree() { Destory(m_root); }
+	~BinaryTree() { Destroy(&m_root); }
 
 	BiTree<T> Root() { return m_root; }
 	bool Empty() { return nullptr == m_root; }
@@ -302,13 +303,25 @@ protected:
 		return cur;
 	}
 
-	void Destory(BiTree<T> root)
+	//传一级指针的引用
+	//void Destroy(BiTree<T>& root)
+	//{
+	//	if (nullptr != root) {
+	//		Destroy(root->lchild);
+	//		Destroy(root->rchild);
+	//		delete root;
+	//		root = nullptr;
+	//	}
+	//}
+
+	//传二级指针
+	void Destroy(BiTree<T>* root)
 	{
-		if (nullptr != root) {
-			Destory(root->lchild);
-			Destory(root->rchild);
-			delete root;
-			root = nullptr;
+		if (nullptr != *root) {
+			Destroy(&(*root)->lchild);
+			Destroy(&(*root)->rchild);
+			delete *root;
+			*root = nullptr;
 		}
 	}
 
