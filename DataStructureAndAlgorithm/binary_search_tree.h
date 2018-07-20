@@ -87,6 +87,23 @@ public:
 	}
 
 private:
+
+	BSTPtr<T> Search(BSTPtr<T> root, const T& e)
+	{
+		BSTPtr<T> cur = root;
+		while (cur) {
+			if (e < cur->data) {
+				cur = cur->lchild;
+			}
+			else if (e > cur->data) {
+				cur = cur->rchild;
+			}
+			else (e == cur->data) {
+				return cur;
+			}
+		}
+	}
+
 	void Remove(BSTPtr root, const T& e)
 	{
 
