@@ -18,7 +18,7 @@ private:
 	BSTPtr root;
 public:
 	BSTree() : root(nullptr) {}
-	~BSTree() { if (root) delete root; }
+	~BSTree() { Destory(); }
 
 	BSTPtr Search_Recursive(T data)
 	{
@@ -30,12 +30,12 @@ public:
 
 	}
 
-	T Max()
+	T MaxVal()
 	{
 
 	}
 
-	T Min()
+	T MinVal()
 	{
 
 	}
@@ -78,7 +78,7 @@ public:
 
 	void Destory()
 	{
-
+		Destroy(root);
 	}
 
 	void Print()
@@ -102,26 +102,137 @@ private:
 				return cur;
 			}
 		}
+		return nullptr;
 	}
 
+	//删除结点的时候，要让其父结点的子结点为空，而不是直接让该结点为空
 	void Remove(BSTPtr root, const T& e)
 	{
-
+		BSTPtr<T> cur = Search(root, e);
+		if (cur) {
+			return;
+		}
+		//被删除结点是叶子结点
+		if (nullptr == cur->lchild && nullptr == cur->rchild) {
+			//如果是root结点，直接删除，非root结点要让其父结点的child为nullptr
+			if (cur == root) {
+				if (cur == cur->parent->lchild) {
+					cur->parent->lchild = nullptr;
+				}
+				else {
+					cur->parent->rchild = nullptr;
+				}
+			}
+			delete cur;
+			cur = nullptr;
+		}
+		//被删除结点只有右子树
+		else if (nullptr == cur->lchild) {
+			//如果cur是根结点
+			if (cur == root) {
+				root = cur->rchild;
+			}
+			else {
+				if (cur == cur->parent->lchild) {
+					cur->parent->lchild = cur->rchild;
+				}
+				else {
+					cur->parent->rchild = cur->rchild;
+				}
+			}
+			delete cur;
+			cur = nullptr;
+		}
+		//被删除结点只有左子树
+		else if (nullptr == cur->rchild) {
+			if (cur == root) {
+				root = cur->lchild;
+			}
+			else {
+				if (cur == cur->parent->lchild) {
+					cur->parent->lchild = cur->lchild;
+				}
+				else {
+					cur->parent->lchild = cur->rchild;
+				}
+			}
+			delete cur;
+			cur = nullptr;
+		}
+		//被删除结点有左子树和右子树
+		else {
+			//将要被删除的结点用该结点的右子树中最小结点值替代
+			BSTPtr<T> rmin = MinNode(cur->rchild);
+			cur->data = rmin->data;
+			//rmin是cur的右孩子
+			if (rmin->parent == cur) {
+				cur->rchild = nullptr;
+			}
+			//rmin是右子树某结点的左孩子
+			else {
+				rmin->parent->lchild = nullptr;
+			}
+			delete rmin;
+		}
 	}
 
-	void Max(BSTPtr root)
+	BSTPtr<T> DeleteNode(BSTPtr<T> root, const T& key)
+	{
+		if (nullptr == root) {
+			return nullptr;
+		}
+		if (key < root->data) {
+			root->lchild = DeleteNode(root->lchild, key);
+		}
+		else if (key > root->data) {
+			root->rchild = DeleteNode(root->rchild, key);
+		}
+		else {
+			//将要被删除结点的值用其右子树最小结点的值替换
+			if (nullptr != root->rchild) {
+				root->data = MinVal(root->rchild);
+				root->rchild = DeleteNode(root->rchild, root->data);
+			}
+			//右子树为空，将左子树上移
+			else {
+				BSTPtr<T> tmp = root->lchild;
+				delete root;
+				root = tmp;
+			}
+		}
+		return root;
+	}
+
+	T MaxVal(BSTPtr<T> root)
 	{
 
 	}
 
-	void Min(BSTPtr root)
+	T MinVal(BSTPtr<T> root)
 	{
-
+		if (nullptr == root) {
+			return 0;
+		}
+		return (nullptr != root->lchild) ? MinVal(root->lchild) : root->data;
 	}
 
-	void Destroy(BSTPtr& root)
+	BSTPtr<t> MinNode(BSTPtr<T> root)
 	{
+		//容易忽略root为nullptr的情况
+		if (nullptr == root) {
+			return nullptr;
+		}
+		return (nullptr != root->lchild) ? MinNode(root->lchild) : root;
+	}
 
+	void Destroy(BSTPtr<T>& root)
+	{
+		if (root) {
+			Destory(root->lchild);
+			Destory(root->rchild);
+			delete root;
+			root = nullptr;
+		}
 	}
 
 };
