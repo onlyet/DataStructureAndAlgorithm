@@ -11,6 +11,7 @@
 #include"linked_list.h"
 #include"stack_queue_interview.h"
 #include"binary_tree.h"
+#include"sort.h"
 
 #include<iostream>
 #include<string>
@@ -204,6 +205,27 @@ void binary_tree_test()
 
 }
 
+void sort_test()
+{
+    int a[10] = { 1, 3, 7, 2, 5, 6, 8, 4, 99, 10 };
+    //int a[10] = { 1,3,2,6,4,7,8,9,10,11 };
+    cout << "Before sorted:";
+    for (auto &e : a) {
+        cout << e << " ";
+    }
+    cout << endl;
+
+    //bubble_sort_3(a, 10);
+    //selection_sort(a, 10);
+    insertion_sort(a, 10);
+
+    cout << " After sorted:";
+    for (auto &e : a) {
+        cout << e << " ";
+    }
+    cout << endl;
+}
+
 int main()
 {
 	
@@ -214,7 +236,9 @@ int main()
 
 		//verify_pop_logic();
 
-		binary_tree_test();
+		//binary_tree_test();
+
+        sort_test();
 
 		system("pause");
 	}
