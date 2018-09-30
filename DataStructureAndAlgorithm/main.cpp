@@ -159,16 +159,16 @@ void verify_pop_logic()
 
 void binary_tree_test()
 {
-	//int a[10] = { 1,2,3,'#','#',4,'#','#',5,6 };
-	//int a[10] = { 1, '#', 2 };
-	int a[10] = { 1, '#', '#' };
-	BinaryTree<int> b(a, 10, '#');
+    int a[20] = { 1,2,3,'#','#',4,'#','#',5, 6, 7,'#','#','#', 8,'#','#' };
+    //int a[10] = { 1, '#', 2 };
+    //int a[10] = { 1, '#', '#' };
+	BinaryTree<int> b(a, 20, '#');
 	cout << "preorder: ";
 	b.PreorderTraversal();
 	cout << endl;
-	b.Destroy();
-	b.PreorderTraversal();
-	cout << endl;
+	//b.Destroy();
+	//b.PreorderTraversal();
+	//cout << endl;
 	/*cout << "inorder: ";
 	b.InorderTraversal();
 	cout << endl;
@@ -203,11 +203,13 @@ void binary_tree_test()
 	//b.NonRecursiveInorder_O1();
 	//cout << endl;
 
+    cout << "depth of bitree is : " << b.Depth() << endl;
+    cout << "leaf size of bitree is : " << b.LeafSize() << endl;
 }
 
 void sort_test()
 {
-    int a[10] = { 1, 3, 7, 2, 5, 6, 8, 4, 99, 10 };
+    int a[10] = { 5, 3, 7, 2, 1, 6, 8, 4, 99, 10 };
     int tmp[10] = { 0 };
     //int a[10] = { 1,3,2,6,4,7,8,9,10,11 };
     cout << "Before sorted:";
@@ -219,8 +221,8 @@ void sort_test()
     //bubble_sort_3(a, 10);
     //selection_sort(a, 10);
     //insertion_sort(a, 10);
-    //quick_sort(a, 0, 9);
-    merge_sort(a, 0, 9, tmp);
+    quick_sort(a, 0, 9);
+    //merge_sort(a, 0, 9, tmp);
 
     cout << " After sorted:";
     for (auto &e : a) {
@@ -239,9 +241,9 @@ int main()
 
 		//verify_pop_logic();
 
-		//binary_tree_test();
+		binary_tree_test();
 
-        sort_test();
+        //sort_test();
 
 		system("pause");
 	}

@@ -130,7 +130,7 @@ void quick_sort(T *a, int left, int right)
                 ++i;
             }
             if (i < j) {
-                a[j] = a[i];
+                a[j--] = a[i];
             }
         }
         a[i] = mid;     //将中值放在找到的位置

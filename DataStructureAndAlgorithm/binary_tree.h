@@ -404,3 +404,23 @@ private:
 
 #endif // !BINARY_TREE_H
 
+struct Node {
+    int data;
+    Node *lchild;
+    Node *rchild;
+};
+
+int height(Node *cur)
+{
+    if (!cur) {
+        return 0;
+    }
+    int a = height(cur->lchild);
+    int b = height(cur->rchild);
+    if (a > b) {
+        return a + 1;
+    }
+    else {
+        return b + 1;
+    }
+}
