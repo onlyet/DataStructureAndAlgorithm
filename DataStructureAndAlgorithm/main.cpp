@@ -210,7 +210,8 @@ void binary_tree_test()
 void sort_test()
 {
     int a[10] = { 5, 3, 7, 2, 1, 6, 8, 4, 99, 10 };
-    int tmp[10] = { 0 };
+    //int a[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+    //int tmp[10] = { 0 };
     //int a[10] = { 1,3,2,6,4,7,8,9,10,11 };
     cout << "Before sorted:";
     for (auto &e : a) {
@@ -221,7 +222,8 @@ void sort_test()
     //bubble_sort_3(a, 10);
     //selection_sort(a, 10);
     //insertion_sort(a, 10);
-    quick_sort(a, 0, 9);
+    shell_sort(a, 10);
+    //quick_sort(a, 0, 9);
     //merge_sort(a, 0, 9, tmp);
 
     cout << " After sorted:";
@@ -241,9 +243,9 @@ int main()
 
 		//verify_pop_logic();
 
-		binary_tree_test();
+		//binary_tree_test();
 
-        //sort_test();
+        sort_test();
 
 		system("pause");
 	}
