@@ -126,18 +126,34 @@ void shell_sort(int arr[], int len) {
 }
 #endif
 
+//template<typename T>
+//void shell_sort(T *arr, int len)
+//{
+//    for (int stepLen = len / 2; stepLen >= 1; stepLen /= 2) {
+//        for (int i = stepLen; i < len; ++i) {
+//            T key = arr[i];
+//            T j;
+//            for (j = i; j >= stepLen && arr[j - stepLen] > key; j -= stepLen) {
+//                arr[j] = arr[j - stepLen];
+//            }
+//            arr[j] = key;
+//        }
+//    }
+//}
+
 template<typename T>
-void shell_sort(T *arr, int len)
-{
-    for (int stepLen = len / 2; stepLen >= 1; stepLen /= 2) {
-        for (int i = stepLen; i < len; ++i) {
-            T key = arr[i];
-            T j;
-            for (j = i; j >= stepLen && arr[j - stepLen] > key; j -= stepLen) {
-                arr[j] = arr[j - stepLen];
+void shell_sort(T array[], int length) {
+    int h = 1;
+    while (h < length / 3) {
+        h = 3 * h + 1;
+    }
+    while (h >= 1) {
+        for (int i = h; i < length; i++) {
+            for (int j = i; j >= h && array[j] < array[j - h]; j -= h) {
+                std::swap(array[j], array[j - h]);
             }
-            arr[j] = key;
         }
+        h = h / 3;
     }
 }
 
