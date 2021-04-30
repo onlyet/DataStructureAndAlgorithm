@@ -112,6 +112,7 @@ void insertion_sort(T *a, int n)
     }
 }
 
+#if 0
 void shell_sort(int arr[], int len) {
     int gap, i, j;
     int temp;
@@ -122,6 +123,22 @@ void shell_sort(int arr[], int len) {
                 arr[j + gap] = arr[j];
             arr[j + gap] = temp;
         }
+}
+#endif
+
+template<typename T>
+void shell_sort(T *arr, int len)
+{
+    for (int stepLen = len / 2; stepLen >= 1; stepLen /= 2) {
+        for (int i = stepLen; i < len; ++i) {
+            T key = arr[i];
+            T j;
+            for (j = i; j >= stepLen && arr[j - stepLen] > key; j -= stepLen) {
+                arr[j] = arr[j - stepLen];
+            }
+            arr[j] = key;
+        }
+    }
 }
 
 //思路：递归和分治
