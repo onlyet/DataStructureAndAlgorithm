@@ -126,21 +126,22 @@ void shell_sort(int arr[], int len) {
 }
 #endif
 
-//template<typename T>
-//void shell_sort(T *arr, int len)
-//{
-//    for (int stepLen = len / 2; stepLen >= 1; stepLen /= 2) {
-//        for (int i = stepLen; i < len; ++i) {
-//            T key = arr[i];
-//            T j;
-//            for (j = i; j >= stepLen && arr[j - stepLen] > key; j -= stepLen) {
-//                arr[j] = arr[j - stepLen];
-//            }
-//            arr[j] = key;
-//        }
-//    }
-//}
+template<typename T>
+void shell_sort(T *arr, int len)
+{
+    for (int stepLen = len / 2; stepLen >= 1; stepLen /= 2) {
+        for (int i = stepLen; i < len; ++i) {
+            T key = arr[i];
+            T j;
+            for (j = i; j >= stepLen && arr[j - stepLen] > key; j -= stepLen) {
+                arr[j] = arr[j - stepLen];
+            }
+            arr[j] = key;
+        }
+    }
+}
 
+#if 0
 template<typename T>
 void shell_sort(T array[], int length) {
     int h = 1;
@@ -156,7 +157,9 @@ void shell_sort(T array[], int length) {
         h = h / 3;
     }
 }
+#endif
 
+#if 0
 //思路：递归和分治
 template<typename T>
 void quick_sort(T *a, int left, int right)
@@ -165,13 +168,13 @@ void quick_sort(T *a, int left, int right)
         int i = left, j = right;
         T mid = a[left];
         while (i < j) {
-            while (i < j && a[j] > mid) {   //从右往左找到第一个小于mid的数的下标
+            while (i < j && a[j] >= mid) {   //从右往左找到第一个小于mid的数的下标
                 --j;
             }
             if (i < j) {
                 a[i++] = a[j];
             }
-            while (i < j && a[i] < mid) {   //从左往右找到第一个大于mid的数的下标
+            while (i < j && a[i] <= mid) {   //从左往右找到第一个大于mid的数的下标
                 ++i;
             }
             if (i < j) {
@@ -183,6 +186,7 @@ void quick_sort(T *a, int left, int right)
         quick_sort(a, i + 1, right);
     }
 }
+#endif
 
 template<typename T>
 static void merge_array(T *a, int start, int mid, int end, T *tmp)
@@ -210,6 +214,7 @@ static void merge_array(T *a, int start, int mid, int end, T *tmp)
     }
 }
 
+#if 0
 //time:O(N*logN), space:O(N)
 template<typename T>
 void merge_sort(T *a, int start, int end, T *tmp)
@@ -220,4 +225,81 @@ void merge_sort(T *a, int start, int end, T *tmp)
         merge_sort(a, mid + 1, end, tmp);
         merge_array(a, start, mid, end, tmp);
     }
+}
+#endif
+
+template<typename T>
+void quick_sort_impl(T arr[], int left, int right) {
+    if (left >= right) {
+        return;
+    }
+    int i = left, j = right;
+    T midValue = arr[i];
+
+    while (i < j) {
+        while (i < j && arr[j] >= midValue) {
+            --j;
+        }
+        if (i < j) {
+            arr[i++] = arr[j];
+        }
+        while (i < j && arr[i] <= midValue) {
+            ++i;
+        }
+        if (i < j) {
+            arr[j--] = arr[i];
+        }
+    }
+
+    arr[i] = midValue;
+
+    quick_sort_impl(arr, left, i - 1);
+    quick_sort_impl(arr, i + 1, right);
+}
+
+template<typename T>
+void quick_sort(T arr[], int len) {
+    quick_sort_impl(arr, 0, len - 1);
+}
+
+
+template<typename T>
+void merge(T arr[], T tmp[], int left, int mid, int right) {
+    int i = left, j = mid + 1;
+    int k = 0;
+
+    while (i <= mid && j <= right) {
+        if (arr[i] < arr[j]) {
+            tmp[k++] = arr[i++];
+        }
+        else {
+            tmp[k++] = arr[j++];
+        }
+    }
+    while (i <= mid) {
+        tmp[k++] = arr[i++];
+    }
+    while (j <= right) {
+        tmp[k++] = arr[j++];
+    }
+
+    for (int i = 0; i < k; ++i) {
+        arr[left++] = tmp[i];
+    }
+}
+
+template<typename T>
+void merge_sort_impl(T arr[], T tmp[], int left, int right) {
+    if (left >= right) {
+        return;
+    }
+    int mid = (left + right) / 2;
+    merge_sort_impl(arr, tmp, left, mid);
+    merge_sort_impl(arr, tmp, mid + 1, right);
+    merge(arr, tmp, left, mid, right);
+}
+
+template<typename T>
+void merge_sort(T arr[], int len, T tmp[]) {
+    merge_sort_impl(arr, tmp, 0, len - 1);
 }
