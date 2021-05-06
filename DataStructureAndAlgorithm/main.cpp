@@ -12,6 +12,7 @@
 #include"stack_queue_interview.h"
 #include"binary_tree.h"
 #include"sort.h"
+#include "common.h"
 
 #include<iostream>
 #include<string>
@@ -245,7 +246,9 @@ int main()
 
 		//binary_tree_test();
 
-        sort_test();
+        //sort_test();
+
+        kmp_test();
 
 		system("pause");
 	}
