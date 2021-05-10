@@ -31,8 +31,7 @@
 *.out
 *.app
 
-*.vcxproj
-*.filters
+
 *.user
 .vs/
 Debug/
