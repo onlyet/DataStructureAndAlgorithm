@@ -227,7 +227,9 @@ void sort_test()
     //quick_sort(a, 0, 9);
     //quick_sort(a, 10);
     //merge_sort(a, 0, 9, tmp);
-    merge_sort(a, 10, tmp);
+    //merge_sort(a, 10, tmp);
+
+    heap_sort(a, 10);
 
     cout << " After sorted:";
     for (auto &e : a) {
@@ -248,9 +250,9 @@ int main()
 
 		//binary_tree_test();
 
-        //sort_test();
+        sort_test();
 
-        kmp_test();
+        //kmp_test();
 
 		system("pause");
 	}

@@ -303,3 +303,36 @@ template<typename T>
 void merge_sort(T arr[], int len, T tmp[]) {
     merge_sort_impl(arr, tmp, 0, len - 1);
 }
+
+template<typename T>
+void heapify(T *arr, int len) {
+    int parent;
+    for (int i = 1; i < len; ++i) {
+        int j = i;
+        while (j > 0) {
+            if (j % 2) {
+                parent = (j - 1) / 2;
+            }
+            else {
+                parent = (j - 2) / 2;
+            }
+            if (arr[j] > arr[parent]) {
+                std::swap(arr[j], arr[parent]);
+                j = parent;
+            }
+            else {
+                break;
+            }
+        }
+    }
+}
+
+template<typename T>
+void heap_sort(T *arr, int len) {
+    int end = len;
+    while (end > 1) {
+        heapify(arr, end);
+        std::swap(arr[0], arr[end - 1]);
+        --end;
+    }
+}
