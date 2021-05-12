@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include<assert.h>
+#include <iostream>
 
 //排序算法都按升序处理
 
@@ -304,6 +305,7 @@ void merge_sort(T arr[], int len, T tmp[]) {
     merge_sort_impl(arr, tmp, 0, len - 1);
 }
 
+#if 0
 template<typename T>
 void heapify(T *arr, int len) {
     int parent;
@@ -336,3 +338,235 @@ void heap_sort(T *arr, int len) {
         --end;
     }
 }
+#elif 1
+template<typename T>
+void heapify(T arr[], int start, int end) {
+    int dad = start;
+    int son = 2 * dad + 1;
+    while (son <= end) {
+        if (son + 1 <= end && arr[son] < arr[son + 1]) {
+            ++son;
+        }
+        if (arr[dad] > arr[son]) {
+            return;
+        }
+        else {
+            std::swap(arr[dad], arr[son]);
+            dad = son;
+            son = 2 * dad + 1;
+        }
+    }
+}
+
+template<typename T>
+void heap_sort(T arr[], int len) {
+    for (int i = len / 2 - 1; i >= 0; --i) {
+        heapify(arr, i, len - 1);
+    }
+
+    for (int i = len - 1; i > 0; --i) {
+        std::swap(arr[0], arr[i]);
+        heapify(arr, 0, i - 1);
+    }
+}
+#else
+void max_heapify(int arr[], int start, int end) {
+    // 建立父節點指標和子節點指標
+    int dad = start;
+    int son = dad * 2 + 1;
+    while (son <= end) { // 若子節點指標在範圍內才做比較
+        if (son + 1 <= end && arr[son] < arr[son + 1]) // 先比較兩個子節點大小，選擇最大的
+            son++;
+        if (arr[dad] > arr[son]) // 如果父節點大於子節點代表調整完畢，直接跳出函數
+            return;
+        else { // 否則交換父子內容再繼續子節點和孫節點比較
+            std::swap(arr[dad], arr[son]);
+            dad = son;
+            son = dad * 2 + 1;
+        }
+    }
+}
+
+void heap_sort(int arr[], int len) {
+    // 初始化，i從最後一個父節點開始調整
+    for (int i = len / 2 - 1; i >= 0; i--)
+    {
+        max_heapify(arr, i, len - 1);
+    }
+
+    // 先將第一個元素和已经排好的元素前一位做交換，再從新調整(刚调整的元素之前的元素)，直到排序完畢
+    for (int i = len - 1; i > 0; i--) {
+        std::swap(arr[0], arr[i]);
+        for (int i = 0; i < len; ++i) {
+            std::cout << arr[i] << " ";
+        }
+        std::cout << std::endl;
+
+        max_heapify(arr, 0, i - 1);
+    }
+}
+#endif
+
+void counting_sort(int arr[], int sorted_arr[], int len, int max) {
+    int *count_arr = new int[max + 1];
+    for (int i = 0; i <= max; ++i) {
+        count_arr[i] = 0;
+    }
+    for (int i = 0; i < len; ++i) {
+        ++count_arr[arr[i]];
+    }
+    for (int i = 1; i <= max; ++i) {
+        count_arr[i] += count_arr[i - 1];
+    }
+    for (int i = len - 1; i >= 0; --i) {
+        int j = arr[i];
+        sorted_arr[count_arr[j] - 1] = j;
+        --count_arr[j];
+    }
+    delete[] count_arr;
+}
+
+void counting_sort_demo(int arr[], int len) {
+    int *sorted_arr = new int[len];
+    int max = 99;
+    counting_sort(arr, sorted_arr, len, max);
+    for (int i = 0; i < len; ++i) {
+        std::cout << sorted_arr[i] << " ";
+    }
+    std::cout << std::endl;
+    delete[] sorted_arr;
+}
+
+
+#if 0
+#include<iterator>
+#include<iostream>
+#include<vector>
+using namespace std;
+
+const int BUCKET_NUM = 10;
+
+struct ListNode {
+    explicit ListNode(int i = 0) :mData(i), mNext(NULL) {}
+    ListNode* mNext;
+    int mData;
+};
+
+ListNode* insert(ListNode* head, int val) {
+    ListNode dummyNode;
+    ListNode *newNode = new ListNode(val);
+    ListNode *pre, *curr;
+    dummyNode.mNext = head;
+    pre = &dummyNode;
+    curr = head;
+    while (NULL != curr && curr->mData <= val) {
+        pre = curr;
+        curr = curr->mNext;
+    }
+    newNode->mNext = curr;
+    pre->mNext = newNode;
+    return dummyNode.mNext;
+}
+
+
+ListNode* Merge(ListNode *head1, ListNode *head2) {
+    ListNode dummyNode;
+    ListNode *dummy = &dummyNode;
+    while (NULL != head1 && NULL != head2) {
+        if (head1->mData <= head2->mData) {
+            dummy->mNext = head1;
+            head1 = head1->mNext;
+        }
+        else {
+            dummy->mNext = head2;
+            head2 = head2->mNext;
+        }
+        dummy = dummy->mNext;
+    }
+    if (NULL != head1) dummy->mNext = head1;
+    if (NULL != head2) dummy->mNext = head2;
+
+    return dummyNode.mNext;
+}
+
+void BucketSort(int n, int arr[]) {
+    vector<ListNode*> buckets(BUCKET_NUM, (ListNode*)(0));
+    for (int i = 0; i < n; ++i) {
+        int index = arr[i] / BUCKET_NUM;
+        ListNode *head = buckets.at(index);
+        buckets.at(index) = insert(head, arr[i]);
+    }
+    ListNode *head = buckets.at(0);
+    for (int i = 1; i < BUCKET_NUM; ++i) {
+        head = Merge(head, buckets.at(i));
+    }
+    for (int i = 0; i < n; ++i) {
+        arr[i] = head->mData;
+        head = head->mNext;
+    }
+}
+#else
+// 假设元素区间是[0,100)
+// 不带头结点的链表
+template<typename T>
+struct ListNode {
+    T value;
+    ListNode *next;
+    explicit ListNode(T value = 0) : value(value), next(nullptr) {}
+};
+
+template<typename T>
+ListNode<T>* insert(ListNode<T>* head, T value) {
+    ListNode<T> dumpNode;
+    ListNode<T>* dummy = &dumpNode;
+    dummy->next = head;
+    ListNode<T>* pre = dummy;
+    ListNode<T>* cur = head;
+    while (nullptr != cur && cur->value <= value) {
+        pre = cur;
+        cur = cur->next;
+    }
+    ListNode<T>* new_node = new ListNode<T>(value);
+    new_node->next = cur;
+    pre->next = new_node;
+
+    return dummy->next;
+}
+
+// 两个链表有序，并且right中元素大于left中元素
+template<typename T>
+ListNode<T>* merge(ListNode<T>* left, ListNode<T>* right) {
+    if (nullptr == left) {
+        return right;
+    }
+    else if (nullptr == right) {
+        return left;
+    }
+    ListNode<T>* head = left;
+    while (nullptr != left->next) {
+        left = left->next;
+    }
+    left->next = right;
+    return head;
+}
+
+// 当前桶的元素范围和数组长度一样
+template<typename T>
+void bucket_sort(T arr[], int len) {
+    vector<ListNode<T>*> buckets(len, nullptr);
+    ListNode<T>* head;
+    for (int i = 0; i < len; ++i) {
+        int index = arr[i] / len;
+        head = buckets.at(index);
+        buckets.at(index) = insert(head, arr[i]);
+    }
+    head = buckets.at(0);
+    for (int i = 1; i < len; ++i) {
+        head = merge(head, buckets.at(i));
+    }
+    for (int i = 0; i < len; ++i) {
+        arr[i] = head->value;
+        head = head->next;
+    }
+}
+#endif
