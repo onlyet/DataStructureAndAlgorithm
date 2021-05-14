@@ -210,14 +210,24 @@ void binary_tree_test()
 
 void sort_test()
 {
+#if 1
     //int a[10] = { 15, 3, 7, 42, 1, 26, 8, 84, 99, 10 };
-    //int a[10] = { 15, 3, 7, 1, 2, 1, 8, 84, 99, 10 };
-    //int a[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+    int a[20] = { 18, 162, 83, 20, 198, 40, 230, 227, 289, 105, 76, 236, 173, 276, 192, 277, 85, 169, 52, 216 };
     int tmp[10] = { 0 };
-    int a[20] = { 63, 157, 189, 51, 101, 47, 141, 121, 157, 156, 194, 117, 98, 139, 67, 133, 181, 13, 28, 109 };
+    int len = 20;
+#else
+    int* a = new int[len];
+    srand(time(NULL));
+    for (int i = 0; i < len; ++i) {
+        a[i] = rand() % 300;
+    }
+#endif
     cout << "Before sorted:";
-    for (auto &e : a) {
-        cout << e << " ";
+    //for (auto &e : a) {
+    //    cout << e << " ";
+    //}
+    for (int i = 0; i < len; ++i) {
+        cout << a[i] << " ";
     }
     cout << endl;
 
@@ -234,11 +244,15 @@ void sort_test()
     //counting_sort_demo(a, 10);
     //BucketSort(10, a);
 
-    bucket_sort(a, 20);
+    //bucket_sort(a, 20);
+    radix_sort(a, len);
 
     cout << " After sorted:";
-    for (auto &e : a) {
-        cout << e << " ";
+    //for (auto &e : a) {
+    //    cout << e << " ";
+    //}
+    for (int i = 0; i < len; ++i) {
+        cout << a[i] << " ";
     }
     cout << endl;
 }

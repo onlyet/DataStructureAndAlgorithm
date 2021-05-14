@@ -594,7 +594,6 @@ int get_max_digit(T arr[], int len) {
 }
 
 //template<typename T>
-// 基数排序的桶相当于一个栈，元素后进先出，所以填充辅助数组的时候从后往前填充（len-1 -> 0）
 void radix_sort(int arr[], int len) {
     int max_digit = get_max_digit(arr, len);
     int count_arr[10];
@@ -611,12 +610,8 @@ void radix_sort(int arr[], int len) {
         for (int i = 1; i < 10; ++i) {
             count_arr[i] += count_arr[i - 1];
         }
-#if 0
-        // 正向填充辅助数组的话就破坏了稳定性
         //for (int i = 0; i < len; ++i) {
-#else
         for (int i = len - 1; i >= 0; --i) {
-#endif
             int j = arr[i] / radix % 10;
             tmp_arr[count_arr[j] - 1] = arr[i];
             --count_arr[j];
