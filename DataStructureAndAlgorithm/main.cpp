@@ -210,16 +210,16 @@ void binary_tree_test()
 
 void sort_test()
 {
-#if 1
+#if 0
     //int a[10] = { 15, 3, 7, 42, 1, 26, 8, 84, 99, 10 };
     int a[20] = { 18, 162, 83, 20, 198, 40, 230, 227, 289, 105, 76, 236, 173, 276, 192, 277, 85, 169, 52, 216 };
     int tmp[10] = { 0 };
-    int len = 20;
 #else
+    int len = 20;
     int* a = new int[len];
     srand(time(NULL));
     for (int i = 0; i < len; ++i) {
-        a[i] = rand() % 300;
+        a[i] = rand() % 400;
     }
 #endif
     cout << "Before sorted:";

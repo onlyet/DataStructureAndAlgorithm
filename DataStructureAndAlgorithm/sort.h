@@ -578,19 +578,37 @@ void bucket_sort(T arr[], int len) {
 #if 1
 template<typename T>
 int get_max_digit(T arr[], int len) {
-    int max_digit = 1;
-    for (int i = 0; i < len; ++i) {
-        int digit = 1;
-        int j = 10;
-        while (arr[i] / j) {
-            ++digit;
-            j *= 10;
-        }
-        if (digit > max_digit) {
-            max_digit = digit;
+    if (len < 1) {
+        return 1;
+    }
+
+    //int max_digit = 1;
+    //for (int i = 0; i < len; ++i) {
+    //    int digit = 1;
+    //    int j = 10;
+    //    while (arr[i] / j) {
+    //        ++digit;
+    //        j *= 10;
+    //    }
+    //    if (digit > max_digit) {
+    //        max_digit = digit;
+    //    }
+    //}
+    //return max_digit;
+
+    T maxValue = arr[0];
+    for (int i = 1; i < len; ++i) {
+        if (arr[i] > maxValue) {
+            maxValue = arr[i];
         }
     }
-    return max_digit;
+    int digit = 1;
+    int j = 10;
+    while (maxValue / j) {
+        ++digit;
+        j *= 10;
+    }
+    return digit;
 }
 
 //template<typename T>
@@ -626,10 +644,10 @@ void radix_sort(int arr[], int len) {
         }
         radix *= 10;
 
-        for (int i = 0; i < len; ++i) {
-            cout << arr[i] << " ";
-        }
-        cout << endl;
+        //for (int i = 0; i < len; ++i) {
+        //    cout << arr[i] << " ";
+        //}
+        //cout << endl;
     }
     delete[] tmp_arr;
 }
