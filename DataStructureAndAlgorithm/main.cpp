@@ -8,7 +8,12 @@
 
 #include"sequence_list.h"
 //#include"sequence_list.cpp"
-#include"linked_list.h"
+#if 0
+//#include"linked_list.h"
+#else
+//#include "linked_list_no_header.h"
+#include "linked_list_no_header.cpp"
+#endif
 #include"stack_queue_interview.h"
 #include"binary_tree.h"
 #include"sort.h"
@@ -117,14 +122,17 @@ void linked_list_test()
 	//l.InsertBefore(l.Locate(2), 119);
 	//l.Print();
 
-	LinkedList<int> l, r;
-	l.FrontCreate(30);
-	r.FrontCreate(20);
-	l.Print();
-	r.Print();
-	LinkedListNode<int> *p = Merge(l.Head(), r.Head());
+	//LinkedList<int> l, r;
+	//l.FrontCreate(30);
+	//r.FrontCreate(20);
+	//l.Print();
+	//r.Print();
+	//LinkedListNode<int> *p = Merge(l.Head(), r.Head());
 
-	Print(p);
+	//Print(p);
+
+    int a[10] = { 1,2,3,4,5,6,7,8,9,10 };
+    LinkedList<int> l(a, 10);
 }
 
 //#define SORT_NUM 10
@@ -261,7 +269,7 @@ int main()
 {
 	
 	try {
-		//linked_list_test();
+		linked_list_test();
 
 		//sort_test();
 
@@ -269,7 +277,7 @@ int main()
 
 		//binary_tree_test();
 
-        sort_test();
+        //sort_test();
 
         //kmp_test();
 

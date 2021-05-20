@@ -62,5 +62,8 @@
     <ClCompile Include="kmp.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="linked_list_no_header.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
