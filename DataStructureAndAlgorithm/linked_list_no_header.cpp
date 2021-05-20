@@ -1,6 +1,12 @@
 #include "linked_list_no_header.h"
 
 template<typename T>
+LinkedList<T>::LinkedList() {
+
+}
+
+
+template<typename T>
 LinkedList<T>::LinkedList(T *a, int n)
 {
     assert(a != nullptr && n > 0);
@@ -15,13 +21,23 @@ LinkedList<T>::LinkedList(T *a, int n)
 template<typename T>
 LinkedList<T>::~LinkedList()
 {
+    if (m_hasLoop) {
+        LinkNode<T>* p = head;
+        for (int i = 0; i < m_nodeNum; ++i) {
+            head = head->next;
+            delete p;
+            p = head;
+        }
+        head = nullptr;
+        return;
+    }
+
     while (head) {
         LinkNode<T> *p = head;
         head = head->next;
         delete p;
     }
 }
-
 
 //在第n个元素前插入，n=0:插入头部
 template<typename T>
@@ -114,4 +130,76 @@ LinkNode<T>* LinkedList<T>::Locate(int n)
         ++i;
     }
     return p;
+}
+
+template<typename T>
+void LinkedList<T>::createWithLoop(T *a, int n) {
+    
+    head = new LinkNode<T>(a[0]);
+    LinkNode<T> *cur = head;
+    for (int i = 1; i < n; ++i) {
+        cur->next = new LinkNode<T>(a[i]);
+        cout << cur->data << " ";
+        cur = cur->next;
+    }
+    cur->next = head;
+    cout << cur->data << endl;
+
+    m_hasLoop = true;
+    m_nodeNum = n;
+}
+
+template<typename T>
+void LinkedList<T>::print() {
+    LinkNode<T>* p = head;
+    while (p) {
+        cout << p->data << " ";
+        p = p->next;
+    }
+    cout << endl;
+}
+
+template<typename T>
+LinkNode<T>* LinkedList<T>::kFromTheBottom(int k) {
+    if (!head) {
+        return nullptr;
+    }
+    LinkNode<T> *p = head;
+    LinkNode<T> *q = p;
+    for (int i = 0; q && i < k - 1; ++i) {
+        q = q->next;
+    }
+    while (q && q->next) {
+        p = p->next;
+        q = q->next;
+    }
+    return p;
+}
+
+template<typename T>
+LinkNode<T>* LinkedList<T>::reverse() {
+    LinkNode<T>* prev = nullptr;
+    LinkNode<T>* cur = head;
+    LinkNode<T>* next;
+    while (cur) {
+        next = cur->next;
+        cur->next = prev;
+        prev = cur;
+        cur = next;
+    }
+    head = prev;
+    return head;
+}
+
+template<typename T>
+bool LinkedList<T>::hasLoop() {
+    LinkNode<T> *fast = head, *slow = head;
+    while (/*fast && slow*/fast && fast->next) {
+        fast = fast->next->next;
+        slow = slow->next;
+        if (fast == slow) {
+            return true;
+        }
+    }
+    return false;
 }

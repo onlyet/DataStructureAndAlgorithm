@@ -22,6 +22,7 @@
 #include<iostream>
 #include<string>
 #include<time.h>
+#include <list>
 
 
 using namespace std;
@@ -73,66 +74,79 @@ void sequence_list_test()
 
 void linked_list_test()
 {
-	//LinkedList<string> l;
-	//l.Insert(1, "hello");
-	//l.Insert(2, "Micheal");
-	//l.Insert(3, "!");
-	//l.Print();
-	//l.PushBack("what");
-	//l.PushBack("the");
-	//l.Print();
-	//string s;
-	//l.Erase(2, s);
-	//cout << "erase node :" << s << endl;
-	//l.Print();
-	//l.PushFront("one");
-	//l.Print();
-	//l.PopFront(s);
-	//cout << "erase node :" << s << endl;
-	//l.Print();
-	//l.PopBack(s);
-	//l.Print();
+#if 0
+    LinkedList<string> l;
+    l.Insert(1, "hello");
+    l.Insert(2, "Micheal");
+    l.Insert(3, "!");
+    l.Print();
+    l.PushBack("what");
+    l.PushBack("the");
+    l.Print();
+    string s;
+    l.Erase(2, s);
+    cout << "erase node :" << s << endl;
+    l.Print();
+    l.PushFront("one");
+    l.Print();
+    l.PopFront(s);
+    cout << "erase node :" << s << endl;
+    l.Print();
+    l.PopBack(s);
+    l.Print();
 
-	//cout << "the length = " << l.Length() << endl;
-	//cout << "find string at " << l.Find("hello") << endl;
-	//l.Get(3, s);
-	//cout << "get string = " << s << endl;
-	//l.Set(2, "auto");
-	//l.Print();
-	////l.Clear();
-	////cout << l.Length() << endl;
-	////l.reverse();
-	////l.Print();
-	//l.recursive_reverse(l.Locate(1));
-	//l.Print();
+    cout << "the length = " << l.Length() << endl;
+    cout << "find string at " << l.Find("hello") << endl;
+    l.Get(3, s);
+    cout << "get string = " << s << endl;
+    l.Set(2, "auto");
+    l.Print();
+    //l.Clear();
+    //cout << l.Length() << endl;
+    //l.reverse();
+    //l.Print();
+    l.recursive_reverse(l.Locate(1));
+    l.Print();
 
-	//LinkedList<int> l;
-	//l.FrontCreate(5);
-	//l.Print();
-	////LinkedList<int> l2;
-	////l2.BackCreate(10);
-	////l2.Print();
-	//l.BubbleSort();
-	//l.Print();
-	//l.FindKLast(2);
-	//int i;
-	//l.EraseKLast(3, i);
-	//l.Print();
-	//l.ReversePrint(l.Head());
-	//l.InsertBefore(l.Locate(2), 119);
-	//l.Print();
+    LinkedList<int> l;
+    l.FrontCreate(5);
+    l.Print();
+    //LinkedList<int> l2;
+    //l2.BackCreate(10);
+    //l2.Print();
+    l.BubbleSort();
+    l.Print();
+    l.FindKLast(2);
+    int i;
+    l.EraseKLast(3, i);
+    l.Print();
+    l.ReversePrint(l.Head());
+    l.InsertBefore(l.Locate(2), 119);
+    l.Print();
 
-	//LinkedList<int> l, r;
-	//l.FrontCreate(30);
-	//r.FrontCreate(20);
-	//l.Print();
-	//r.Print();
-	//LinkedListNode<int> *p = Merge(l.Head(), r.Head());
+    LinkedList<int> l, r;
+    l.FrontCreate(30);
+    r.FrontCreate(20);
+    l.Print();
+    r.Print();
+    LinkedListNode<int> *p = Merge(l.Head(), r.Head());
 
-	//Print(p);
+    Print(p);
+#endif
 
     int a[10] = { 1,2,3,4,5,6,7,8,9,10 };
+#if 0
     LinkedList<int> l(a, 10);
+    LinkNode<int>* node =  l.kFromTheBottom(3);
+    cout << "k from the bttom data: " << node->data << endl;
+    l.print();
+    l.reverse();
+    l.print();
+#endif
+    LinkedList<int> l;
+    l.createWithLoop(a, 10);
+    //l.print();
+    cout << "has loop= " << l.hasLoop() << endl;
 }
 
 //#define SORT_NUM 10
