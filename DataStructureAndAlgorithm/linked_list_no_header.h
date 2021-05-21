@@ -11,6 +11,9 @@ struct LinkNode {
 template<typename T>
 class LinkedList {
 public:
+    template<typename U>
+    friend void createTwoIntersectingList(LinkedList<U>& l, LinkedList<U>& r);
+
     LinkedList();
     LinkedList(T *a, int n);
     ~LinkedList();
@@ -28,7 +31,10 @@ public:
 //    //不能用p->next= cur,只能用cur->next->next = cur;
     LinkNode<T>* Reverse(LinkNode<T> *cur);
 
-    void createWithLoop(T *a, int n);
+    // 获取头结点
+    LinkNode<T>* getHead();
+
+    void createWithLoop(T *a, int n, int loopEntry);
 
     void print();
 
@@ -37,8 +43,11 @@ public:
 
     LinkNode<T>* reverse();
 
-    bool hasLoop();
+    // 如果有环，则返回相遇点
+    LinkNode<T>* loopMeetPoint();
 
+    // 返回带环单链表的入口点
+    LinkNode<T>* loopEntryPoint(LinkNode<T>* meetPoint);
 
 private:
 //    //n指下标，从0开始
@@ -49,3 +58,11 @@ private:
     bool    m_hasLoop = false;
     int     m_nodeNum = 0;
 };
+
+
+template<typename T>
+void createTwoIntersectingList(LinkedList<T>& l, LinkedList<T>& r);
+
+// 获取两无环单链表的相交点，前提是两个链表都无环，否则死循环
+template<typename T>
+LinkNode<T>* getIntersection(LinkedList<T>& l, LinkedList<T>& r);

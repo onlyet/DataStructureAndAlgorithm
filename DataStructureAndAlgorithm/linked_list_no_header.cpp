@@ -118,6 +118,12 @@ LinkNode<T>* LinkedList<T>::Reverse(LinkNode<T> *cur)
 }
 
 template<typename T>
+LinkNode<T>* LinkedList<T>::getHead()
+{
+    return head;
+}
+
+template<typename T>
 LinkNode<T>* LinkedList<T>::Locate(int n)
 {
     if (n < 0) {
@@ -133,17 +139,29 @@ LinkNode<T>* LinkedList<T>::Locate(int n)
 }
 
 template<typename T>
-void LinkedList<T>::createWithLoop(T *a, int n) {
+void LinkedList<T>::createWithLoop(T *a, int n, int loopEntry) {
     
-    head = new LinkNode<T>(a[0]);
-    LinkNode<T> *cur = head;
-    for (int i = 1; i < n; ++i) {
-        cur->next = new LinkNode<T>(a[i]);
-        cout << cur->data << " ";
-        cur = cur->next;
+    if (!a || n < 1) {
+        return;
     }
-    cur->next = head;
+    head = new LinkNode<T>(a[0]);
+    LinkNode<T> *cur = nullptr;
+    LinkNode<T> *loopNode = nullptr;
+    for (int i = 0; i < n; ++i) {
+        if (0 == i) {
+            cur = head;
+        }
+        else {
+            cur->next = new LinkNode<T>(a[i]);
+            cout << cur->data << " ";
+            cur = cur->next;
+        }
+        if (loopEntry == i) {
+            loopNode = cur;
+        }
+    }
     cout << cur->data << endl;
+    cur->next = loopNode;
 
     m_hasLoop = true;
     m_nodeNum = n;
@@ -192,14 +210,111 @@ LinkNode<T>* LinkedList<T>::reverse() {
 }
 
 template<typename T>
-bool LinkedList<T>::hasLoop() {
+LinkNode<T>* LinkedList<T>::loopMeetPoint() {
     LinkNode<T> *fast = head, *slow = head;
-    while (/*fast && slow*/fast && fast->next) {
+    while (fast && fast->next) {
         fast = fast->next->next;
         slow = slow->next;
         if (fast == slow) {
-            return true;
+            return fast;
         }
     }
-    return false;
+    return nullptr;
+}
+
+template<typename T>
+LinkNode<T>* LinkedList<T>::loopEntryPoint(LinkNode<T>* meetPoint)
+{
+    LinkNode<T> *p = head, *q = meetPoint;
+    //auto p = head, q = meetPoint;
+    while (p != q) {
+        p = p->next;
+        q = q->next;
+    }
+    return p;
+}
+
+
+template<typename T>
+void createTwoIntersectingList(LinkedList<T>& l, LinkedList<T>& r)
+{
+    int a[10] = { 1,2,3,4,5,6,7,8,9,10 };
+    int b[2] = { 22, 33 };
+
+    LinkNode<T> *p = nullptr, *q = nullptr;
+    for (int i = 0; i < 5; ++i) {
+        if (0 == i) {
+            l.head = new LinkNode<T>(a[i]);
+            p = l.head;
+        }
+        else {
+            p->next = new LinkNode<T>(a[i]);
+            p = p->next;
+        }
+    }
+    for (int i = 0; i < 2; ++i) {
+        if (0 == i) {
+            r.head = new LinkNode<T>(b[i]);
+            q = r.head;
+        }
+        else {
+            q->next = new LinkNode<T>(b[i]);
+            q = q->next;
+        }
+    }
+    q->next = p;
+
+    for (int i = 5; i < 10; ++i) {
+        p->next = new LinkNode<T>(a[i]);
+        p = p->next;
+    }
+}
+
+template<typename T>
+LinkNode<T>* getIntersection(LinkedList<T>& l, LinkedList<T>& r)
+{
+    LinkNode<T>* p = l.getHead();
+    LinkNode<T>* q = r.getHead();
+    if (!p || !q) {
+        return nullptr;
+    }
+    int llen = 1, rlen = 1;
+    while (p->next) {
+        ++llen;
+        p = p->next;
+    }
+    while (q->next) {
+        ++rlen;
+        q = q->next;
+    }
+    // 注意：最后一个结点不同，则肯定不相交
+    if (p != q) {
+        return nullptr;
+    }
+
+    p = l.getHead();
+    q = r.getHead();
+    int s;
+    if (llen > rlen) {
+        s = llen - rlen;
+        while (p && s > 0) {
+            p = p->next;
+            --s;
+        }
+    }
+    else {
+        s = rlen - llen;
+        while (q && s > 0) {
+            q = q->next;
+            --s;
+        }
+    }
+    while (p && q) {
+        if (p == q) {
+            return p;
+        }
+        p = p->next;
+        q = q->next;
+    }
+    return nullptr;
 }

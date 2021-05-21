@@ -134,7 +134,7 @@ void linked_list_test()
     Print(p);
 #endif
 
-    int a[10] = { 1,2,3,4,5,6,7,8,9,10 };
+    //int a[10] = { 1,2,3,4,5,6,7,8,9,10 };
 #if 0
     LinkedList<int> l(a, 10);
     LinkNode<int>* node =  l.kFromTheBottom(3);
@@ -143,10 +143,34 @@ void linked_list_test()
     l.reverse();
     l.print();
 #endif
+#if 0
     LinkedList<int> l;
-    l.createWithLoop(a, 10);
-    //l.print();
-    cout << "has loop= " << l.hasLoop() << endl;
+    l.createWithLoop(a, 10, 3);
+
+    LinkNode<int>* meetPoint = l.loopMeetPoint();
+    if (meetPoint) {
+        cout << "has loop, meet point data: " << meetPoint->data << endl;
+
+        LinkNode<int>* entryPoint = l.loopEntryPoint(meetPoint);
+        if (entryPoint) {
+            cout << "entry point data: " << entryPoint->data << endl;
+        }
+    }
+    else {
+        cout << "no loop" << endl;
+    }
+#endif
+    // 相交链表这里不在栈上构造，避免析构时结点delete两次。（因为懒得析构两个相交链表）
+    LinkedList<int>* l = new LinkedList<int>;
+    LinkedList<int>* r = new LinkedList<int>;
+    createTwoIntersectingList(*l, *r);
+    LinkNode<int>* intersection = getIntersection(*l, *r);
+    if (intersection) {
+        cout << "intersection data: " << intersection->data << endl;
+    }
+    else {
+        cout << "no intersection" << endl;
+    }
 }
 
 //#define SORT_NUM 10
