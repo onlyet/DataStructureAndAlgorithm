@@ -126,7 +126,7 @@ public:
 	}
 
 	//时间复杂度：O(n),空间复杂度：O(n)
-	void NonRecursivePreprder_v2()
+	void NonRecursivePreorder_v2()
 	{
 		std::stack<BiTree<T>> s;
 		BiTree<T> cur = m_root;

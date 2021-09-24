@@ -240,7 +240,7 @@ void binary_tree_test()
 	cout << endl;
 
 	cout << "non recursive preorder v2: ";
-	b.NonRecursivePreprder_v2();
+	b.NonRecursivePreorder_v2();
 	cout << endl;
 
 	cout << "non recursive preorder space complexity O(1): ";
