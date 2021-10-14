@@ -33,18 +33,23 @@ typedef struct _RBTree {
 // 父节点是x
 void rotate_left(RBTree* t, RBTreeNode* x) {
     RBTreeNode* y = x->rchild;
-    //if (y->lchild != t->nil) {
     x->rchild = y->lchild;
-    //}
+
+    // 这一步忘了
+    if (y->lchild != t->nil) {
+        y->lchild->parent = x;
+    }
     y->lchild = x;
 
-    if (x->parent != t->nil) {
-        if (x == x->parent->lchild) {
-            x->parent->lchild = y;
-        }
-        else {
-            x->parent->rchild = y;
-        }
+    // 这一步没想出来。由于传的是一级指针x，不能通过指针x直接改变root节点，所以如果x指向根节点则修改root指向为新的根节点
+    if (x->parent == t->nil) {
+        t->root = y;
+    }
+    else if (x == x->parent->lchild) {
+        x->parent->lchild = y;
+    }
+    else {
+        x->parent->rchild = y;
     }
 
     y->parent = x->parent;
@@ -56,15 +61,20 @@ void rotate_left(RBTree* t, RBTreeNode* x) {
 void rotate_right(RBTree* t, RBTreeNode* y) {
     RBTreeNode* x = y->lchild;
     y->lchild = x->rchild;
+    if (x->rchild != t->nil) {
+        x->rchild->parent = y;
+    }
+
     x->rchild = y;
 
-    if (x->parent != t->nil) {
-        if (y == y->parent->lchild) {
-            y->parent->lchild = x;
-        }
-        else {
-            y->parent->rchild = x;
-        }
+    if (y->parent == t->nil) {
+        t->root = x;
+    }
+    else if (y == y->parent->lchild) {
+        y->parent->lchild = x;
+    }
+    else {
+        y->parent->rchild = x;
     }
 
     x->parent = y->parent;
@@ -100,6 +110,7 @@ void balance(RBTree* t, RBTreeNode* x) {
         x->parent->color = BLACK;
         u->color = BLACK;
         x->parent->parent->color = RED;
+        x->color = RED;
         x = x->parent->parent;
         balance(t, x);
     }
@@ -191,7 +202,7 @@ void print(RBTree* t, RBTreeNode* root) {
     }
 
     print(t, root->lchild);
-    printf("%d ", root->data);
+    printf("%d %s\n", root->data, root->color == RED ? "红色" : "黑色");
     print(t, root->rchild);
 }
 
@@ -205,7 +216,7 @@ int main() {
     t.nil->parent = NULL;
     t.root = t.nil;
 
-    DataType a[] = { 1,2,3,4,5 };
+    DataType a[] = { 11,32, 23, 54, 15, 66, 44, 99, 100, 8};
 
     int i;
     int len = sizeof(a) / sizeof(DataType);
@@ -213,9 +224,6 @@ int main() {
         insert(&t, a[i]);
     }
 
-    //for (i = 0; i < len; ++i) {
-    //    printf("%d ", a[i]);
-    //}
     print(&t, t.root);
     printf("\n");
 
