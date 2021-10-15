@@ -154,8 +154,8 @@ void rbtree_insert_balance(RBTree* t, RBTreeNode* x) {
         }
         // 记住上面LL，LR型，下面的RR，RL型，只需要将左右孩子互换，左右旋互换即可
         else {
-            /* case 4
-             * RR型 对祖父节点左旋
+            /* case 6
+             * RR型：对祖父节点左旋
              * 将父节点变为黑色，祖父节点变为红色
              * 旋转前通过原祖父节点的路径在旋转后都通过父节点，黑高不变
             */
@@ -165,8 +165,8 @@ void rbtree_insert_balance(RBTree* t, RBTreeNode* x) {
                 x->color = RED;
                 rbtree_rotate_left(t, x->parent->parent);
             }
-            /* case 5
-             * RL型 先对父节点右旋再对祖父节点左旋
+            /* case 7
+             * RL型：先对父节点右旋再对祖父节点左旋
              * 将插入节点x变为黑色，祖父节点变为红色
              * 旋转前通过原祖父节点的路径在旋转后都通过插入节点x，黑高不变
             */
