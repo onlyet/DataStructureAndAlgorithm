@@ -95,7 +95,7 @@ RBTreeNode* uncle(RBTreeNode* x) {
 }
 
 // x是插入节点
-void rbtree_insert_balance(RBTree* t, RBTreeNode* x) {
+void rbtree_insert_fixup(RBTree* t, RBTreeNode* x) {
     // case 1: x是根节点，变黑
     if (x->parent == t->nil) {
         x->color = BLACK;
@@ -123,7 +123,7 @@ void rbtree_insert_balance(RBTree* t, RBTreeNode* x) {
         x->parent->parent->color = RED;
         x->color = RED;
         x = x->parent->parent;
-        rbtree_insert_balance(t, x);
+        rbtree_insert_fixup(t, x);
     }
     // 父节点是红色，叔节点是黑色
     else {
@@ -211,10 +211,191 @@ void rbtree_insert(RBTree* t, RBTreeNode* n) {
 
     n->parent = y;
 
-    rbtree_insert_balance(t, n);
+    rbtree_insert_fixup(t, n);
 }
 
-// delete
+RBTreeNode* rbtree_find(RBTree* t, KeyType key) {
+    RBTreeNode* cur = t->root;
+    while (cur != t->nil) {
+        if (cur->key > key) {
+            cur = cur->lchild;
+        }
+        else if (cur->key < key) {
+            cur = cur->rchild;
+        }
+        else {
+            return cur;
+        }
+    }
+    return NULL;
+}
+
+RBTreeNode* rbtree_suffix(RBTree* t, RBTreeNode* n) {
+    RBTreeNode* ret = n->rchild;
+    RBTreeNode* left = ret->lchild;
+    while (left != t->nil) {
+        ret = left;
+        left = left->lchild;
+    }
+    return ret;
+}
+
+RBTreeNode* rbtree_sibling(RBTreeNode* n) {
+    RBTreeNode* tmp = n->parent;
+    return n == n->parent->lchild ? n->parent->rchild : n->parent->lchild;
+}
+
+/*
+ * cur是实际删除节点的儿子
+ * 旋转要更新兄弟节点
+*/
+void rbtree_delete_fixup(RBTree* t, RBTreeNode* cur) {
+    while (cur != t->root && BLACK == cur->color) {
+        RBTreeNode* s = rbtree_sibling(cur);
+        if (cur == cur->parent->lchild) {
+            /*
+             * 情况2 兄弟节点是红色
+             * 父节点P改为红色，兄弟节点S改为黑色，对P左旋，兄弟节点变为旋转前的SL
+             * 变色旋转后的各路径黑高没有改变
+             * 但由于通过N节点的黑高仍少1，继续按后续情况处理
+             * 所以兄弟节点如果是红色则转为黑色处理
+            */
+            if (RED == s->color) {
+                cur->parent->color = RED;
+                s->color = BLACK;
+                rbtree_rotate_left(t, cur->parent);
+                s = rbtree_sibling(cur);
+            }
+
+            /*
+             * 情况3 兄弟节点S是黑色，S的两个儿子也是黑色
+             * 将S变为红色，通过S的路径黑高减1，此时通过N和通过S的路径的黑高相同，
+             * 但是通过P的路径的黑高还是比不通过P的路径的黑高少1，所以还需要继续修复。将当前节点改为父节点P。
+             * 注意这里P可能是黑色也可能是红色，这两种情况统一处理了，如果P是红色，则退出循环，将当前节点变为黑色，避免破坏性质4（P,S都是红色）
+            */
+            if (BLACK == s->color && BLACK == s->lchild->color && BLACK == s->rchild->color) {
+                s->color = RED;
+                cur = cur->parent;
+            }
+            else {
+                /*
+                 * 情况4 兄弟节点S是黑色，S的左儿子SL是红色，S的右儿子SR是黑色
+                 * 交换兄弟节点S和左儿子SL的颜色，对S右旋。
+                 * 旋转和变色后各路径的黑高和原来相同，通过N的路径还是黑高少1，通过SR的路径黑高不变，此时满足情况5，跳到情况5处理。
+                */
+                if (BLACK == s->color && RED == s->lchild->color && BLACK == s->rchild->color) {
+                    s->color = RED;
+                    s->lchild->color = BLACK;
+                    rbtree_rotate_right(t, s);
+                    s = rbtree_sibling(cur);
+                }
+
+                /*
+                 * 情况5 兄弟节点S是黑色，S的右儿子SR是红色
+                 * 父节点P和兄弟节点S互换颜色，右儿子SR变为黑色，然后对P左旋
+                 * 修复后，原来通过N节点的路径多了个黑色节点P，黑高加1；
+                 * 原来通过SL的路径黑高不变（P->S->SL变为S->P->SL，而SL在旋转后变为新兄弟）；
+                 * 原来通过SR的路径黑高也不变（P->S->SR变为S->SR，少了个红节点不影响，而SR在旋转后变为N的叔父）
+                 * 此时性质5已修复。
+                */
+                if (BLACK == s->color && RED == s->rchild->color) {
+                    s->color = cur->parent->color;
+                    cur->parent->color = BLACK;
+                    s->rchild->color = RED;
+                    rbtree_rotate_left(t, cur->parent);
+                }
+            }
+        }
+        // 与上面是镜像，互换左右孩子和左右旋即可
+        else {
+            if (RED == s->color) {
+                cur->parent->color = RED;
+                s->color = BLACK;
+                rbtree_rotate_right(t, cur->parent);
+                s = rbtree_sibling(cur);
+            }
+
+            if (BLACK == s->color && BLACK == s->lchild->color && BLACK == s->rchild->color) {
+                s->color = RED;
+                cur = cur->parent;
+            }
+            else {
+                if (BLACK == s->color && RED == s->rchild->color && BLACK == s->lchild->color) {
+                    s->color = RED;
+                    s->rchild->color = BLACK;
+                    rbtree_rotate_left(t, s);
+                    s = rbtree_sibling(cur);
+                }
+
+                if (BLACK == s->color && RED == s->lchild->color) {
+                    s->color = cur->parent->color;
+                    cur->parent->color = BLACK;
+                    s->lchild->color = RED;
+                    rbtree_rotate_right(t, cur->parent);
+                }
+            }
+        }
+    }
+    // 情况1会走到这
+    // 如果当前节点是根节点或者是红色，则将颜色改为黑色
+    cur->color = BLACK;
+}
+
+/*
+ * d是想要删除节点
+ * r是实际删除的节点
+ * n是实际删除节点的儿子（当前节点）
+
+ * 找到d的后继r
+*/
+RBTreeNode* rbtree_delete(RBTree* t, RBTreeNode* d) {
+    RBTreeNode* r;
+    RBTreeNode* cur;
+    // 有两个非叶子节点则查找前驱
+    if (d->lchild != t->nil && d->rchild != t->nil) {
+        r = rbtree_suffix(t, d);
+    }
+    else {
+        r = d;
+    }
+
+    if (r->lchild != t->nil) {
+        cur = r->lchild;
+    }
+    else {
+        cur = r->rchild;
+    }
+
+    // 实际删除的节点r替换为它的儿子n
+    if (r->parent == t->nil) {
+        t->root = t->nil;
+    }
+    else if (r == r->parent->lchild) {
+        r->parent->lchild = cur;
+    }
+    else {
+        r->parent->rchild = cur;
+    }
+
+    //if (cur != t->nil) {
+    cur->parent = r->parent;
+    //}
+    
+    // 想要删除的节点不用实际删除，替换key，value就行
+    if (r != d) {
+        d->key = r->key;
+        d->value = r->value;
+    }
+    
+    //if (RED == r->color) {
+    //    return r;
+    //}
+
+    if (BLACK == cur->color) {
+        rbtree_delete_fixup(t, cur);
+    }
+    return r;
+}
 
 void print(RBTree* t, RBTreeNode* root) {
     if (root == t->nil) {
@@ -249,8 +430,19 @@ int main() {
         rbtree_insert(&t, n);
     }
 
+    printf("插入后：\n");
     print(&t, t.root);
     printf("\n");
+
+    //printf("删除前：\n");
+    for (i = 0; i < len / 2; ++i) {
+        RBTreeNode* n = rbtree_find(&t, a[i]);
+        if (n) {
+            rbtree_delete(&t, n);
+        }
+    }
+    printf("删除后：\n");
+    print(&t, t.root);
 
     free(t.nil);
     t.nil = NULL;
