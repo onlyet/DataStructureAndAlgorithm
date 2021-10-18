@@ -269,9 +269,9 @@ int main()
 
 		//binary_tree_test();
 
-        sort_test();
+        //sort_test();
 
-        //kmp_test();
+        kmp_test();
 
 	}
 	catch (std::exception &e) {

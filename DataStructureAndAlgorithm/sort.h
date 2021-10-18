@@ -192,6 +192,7 @@ void quick_sort(T *a, int left, int right)
 }
 #endif
 
+#if 0
 template<typename T>
 static void merge_array(T *a, int start, int mid, int end, T *tmp)
 {
@@ -218,7 +219,6 @@ static void merge_array(T *a, int start, int mid, int end, T *tmp)
     }
 }
 
-#if 0
 //time:O(N*logN), space:O(N)
 template<typename T>
 void merge_sort(T *a, int start, int end, T *tmp)
