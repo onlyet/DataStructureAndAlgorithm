@@ -391,7 +391,8 @@ RBTreeNode* rbtree_delete(RBTree* t, RBTreeNode* d) {
     //    return r;
     //}
 
-    if (BLACK == cur->color) {
+    //if (BLACK == cur->color) {
+    if (BLACK == r->color) {
         rbtree_delete_fixup(t, cur);
     }
     return r;
