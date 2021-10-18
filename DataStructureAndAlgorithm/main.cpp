@@ -8,7 +8,12 @@
 
 #include"sequence_list.h"
 //#include"sequence_list.cpp"
-#include"linked_list.h"
+#if 0
+//#include"linked_list.h"
+#else
+//#include "linked_list_no_header.h"
+#include "linked_list_no_header.cpp"
+#endif
 #include"stack_queue_interview.h"
 #include"binary_tree.h"
 #include"sort.h"
@@ -17,6 +22,7 @@
 #include<iostream>
 #include<string>
 #include<time.h>
+#include <list>
 
 
 using namespace std;
@@ -68,63 +74,103 @@ void sequence_list_test()
 
 void linked_list_test()
 {
-	//LinkedList<string> l;
-	//l.Insert(1, "hello");
-	//l.Insert(2, "Micheal");
-	//l.Insert(3, "!");
-	//l.Print();
-	//l.PushBack("what");
-	//l.PushBack("the");
-	//l.Print();
-	//string s;
-	//l.Erase(2, s);
-	//cout << "erase node :" << s << endl;
-	//l.Print();
-	//l.PushFront("one");
-	//l.Print();
-	//l.PopFront(s);
-	//cout << "erase node :" << s << endl;
-	//l.Print();
-	//l.PopBack(s);
-	//l.Print();
+#if 0
+    LinkedList<string> l;
+    l.Insert(1, "hello");
+    l.Insert(2, "Micheal");
+    l.Insert(3, "!");
+    l.Print();
+    l.PushBack("what");
+    l.PushBack("the");
+    l.Print();
+    string s;
+    l.Erase(2, s);
+    cout << "erase node :" << s << endl;
+    l.Print();
+    l.PushFront("one");
+    l.Print();
+    l.PopFront(s);
+    cout << "erase node :" << s << endl;
+    l.Print();
+    l.PopBack(s);
+    l.Print();
 
-	//cout << "the length = " << l.Length() << endl;
-	//cout << "find string at " << l.Find("hello") << endl;
-	//l.Get(3, s);
-	//cout << "get string = " << s << endl;
-	//l.Set(2, "auto");
-	//l.Print();
-	////l.Clear();
-	////cout << l.Length() << endl;
-	////l.reverse();
-	////l.Print();
-	//l.recursive_reverse(l.Locate(1));
-	//l.Print();
+    cout << "the length = " << l.Length() << endl;
+    cout << "find string at " << l.Find("hello") << endl;
+    l.Get(3, s);
+    cout << "get string = " << s << endl;
+    l.Set(2, "auto");
+    l.Print();
+    //l.Clear();
+    //cout << l.Length() << endl;
+    //l.reverse();
+    //l.Print();
+    l.recursive_reverse(l.Locate(1));
+    l.Print();
 
-	//LinkedList<int> l;
-	//l.FrontCreate(5);
-	//l.Print();
-	////LinkedList<int> l2;
-	////l2.BackCreate(10);
-	////l2.Print();
-	//l.BubbleSort();
-	//l.Print();
-	//l.FindKLast(2);
-	//int i;
-	//l.EraseKLast(3, i);
-	//l.Print();
-	//l.ReversePrint(l.Head());
-	//l.InsertBefore(l.Locate(2), 119);
-	//l.Print();
+    LinkedList<int> l;
+    l.FrontCreate(5);
+    l.Print();
+    //LinkedList<int> l2;
+    //l2.BackCreate(10);
+    //l2.Print();
+    l.BubbleSort();
+    l.Print();
+    l.FindKLast(2);
+    int i;
+    l.EraseKLast(3, i);
+    l.Print();
+    l.ReversePrint(l.Head());
+    l.InsertBefore(l.Locate(2), 119);
+    l.Print();
 
-	LinkedList<int> l, r;
-	l.FrontCreate(30);
-	r.FrontCreate(20);
-	l.Print();
-	r.Print();
-	LinkedListNode<int> *p = Merge(l.Head(), r.Head());
+    LinkedList<int> l, r;
+    l.FrontCreate(30);
+    r.FrontCreate(20);
+    l.Print();
+    r.Print();
+    LinkedListNode<int> *p = Merge(l.Head(), r.Head());
 
-	Print(p);
+    Print(p);
+#endif
+
+    //int a[10] = { 1,2,3,4,5,6,7,8,9,10 };
+#if 0
+    LinkedList<int> l(a, 10);
+    LinkNode<int>* node =  l.kFromTheBottom(3);
+    cout << "k from the bttom data: " << node->data << endl;
+    l.print();
+    l.reverse();
+    l.print();
+#endif
+#if 0
+    LinkedList<int> l;
+    l.createWithLoop(a, 10, 3);
+
+    LinkNode<int>* meetPoint = l.loopMeetPoint();
+    if (meetPoint) {
+        cout << "has loop, meet point data: " << meetPoint->data << endl;
+
+        LinkNode<int>* entryPoint = l.loopEntryPoint(meetPoint);
+        if (entryPoint) {
+            cout << "entry point data: " << entryPoint->data << endl;
+        }
+    }
+    else {
+        cout << "no loop" << endl;
+    }
+#endif
+    // 相交链表这里不在栈上构造，避免析构时结点delete两次。（因为懒得析构两个相交链表）
+    LinkedList<int>* l = new LinkedList<int>;
+    LinkedList<int>* r = new LinkedList<int>;
+    createTwoIntersectingList(*l, *r);
+    LinkNode<int>* intersection = getIntersection(*l, *r);
+    if (intersection) {
+        cout << "intersection data: " << intersection->data << endl;
+    }
+    else {
+        cout << "no intersection" << endl;
+    }
 }
 
 //#define SORT_NUM 10
@@ -194,7 +240,7 @@ void binary_tree_test()
 	cout << endl;
 
 	cout << "non recursive preorder v2: ";
-	b.NonRecursivePreprder_v2();
+	b.NonRecursivePreorder_v2();
 	cout << endl;
 
 	cout << "non recursive preorder space complexity O(1): ";
@@ -261,7 +307,7 @@ int main()
 {
 	
 	try {
-		//linked_list_test();
+		linked_list_test();
 
 		//sort_test();
 

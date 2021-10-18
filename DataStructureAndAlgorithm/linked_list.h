@@ -526,12 +526,11 @@ LinkedListNode<T> *GetCrossNode(LinkedList<T> *l, LinkedList<T> *r)
 
 	//获得新环的相遇点
 	LinkedListNode<T> *meet_node = r->GetCircleMeetNode();
+    p->pnext = nullptr;	//断开链表l的环
 	if (!meet_node) {
-		p->pnext = nullptr;	//断开链表l的环
 		return nullptr;
 	}
 
-	p->pnext = nullptr;	
 	return r->GetCircleEntryNode(meet_node);		//获得新环的入口点，即两无环单链表的交点
 }
 
