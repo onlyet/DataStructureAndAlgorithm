@@ -31,7 +31,7 @@ typedef struct _RBTreeNode {
 
 typedef struct _RBTree {
     RBTreeNode* root;
-    RBTreeNode* nil;
+    RBTreeNode* nil;        // 叶子节点
 } RBTree;
 
 // 父节点是x
@@ -154,7 +154,7 @@ void rbtree_insert_fixup(RBTree* t, RBTreeNode* x) {
         }
         // 记住上面LL，LR型，下面的RR，RL型，只需要将左右孩子互换，左右旋互换即可
         else {
-            /* case 6
+            /* case 4
              * RR型：对祖父节点左旋
              * 将父节点变为黑色，祖父节点变为红色
              * 旋转前通过原祖父节点的路径在旋转后都通过父节点，黑高不变
@@ -165,7 +165,7 @@ void rbtree_insert_fixup(RBTree* t, RBTreeNode* x) {
                 x->color = RED;
                 rbtree_rotate_left(t, x->parent->parent);
             }
-            /* case 7
+            /* case 5
              * RL型：先对父节点右旋再对祖父节点左旋
              * 将插入节点x变为黑色，祖父节点变为红色
              * 旋转前通过原祖父节点的路径在旋转后都通过插入节点x，黑高不变
@@ -181,6 +181,7 @@ void rbtree_insert_fixup(RBTree* t, RBTreeNode* x) {
     }
 }
 
+// n是插入节点
 void rbtree_insert(RBTree* t, RBTreeNode* n) {
     RBTreeNode* x = t->root;
     RBTreeNode* y = x;
@@ -267,13 +268,15 @@ void rbtree_delete_fixup(RBTree* t, RBTreeNode* cur) {
                 s = rbtree_sibling(cur);
             }
 
+            // 以下兄弟节点S是黑色
+
             /*
              * 情况3 兄弟节点S是黑色，S的两个儿子也是黑色
              * 将S变为红色，通过S的路径黑高减1，此时通过N和通过S的路径的黑高相同，
              * 但是通过P的路径的黑高还是比不通过P的路径的黑高少1，所以还需要继续修复。将当前节点改为父节点P。
              * 注意这里P可能是黑色也可能是红色，这两种情况统一处理了，如果P是红色，则退出循环，将当前节点变为黑色，避免破坏性质4（P,S都是红色）
             */
-            if (BLACK == s->color && BLACK == s->lchild->color && BLACK == s->rchild->color) {
+            if (/*BLACK == s->color &&*/ BLACK == s->lchild->color && BLACK == s->rchild->color) {
                 s->color = RED;
                 cur = cur->parent;
             }
@@ -283,7 +286,7 @@ void rbtree_delete_fixup(RBTree* t, RBTreeNode* cur) {
                  * 交换兄弟节点S和左儿子SL的颜色，对S右旋。
                  * 旋转和变色后各路径的黑高和原来相同，通过N的路径还是黑高少1，通过SR的路径黑高不变，此时满足情况5，跳到情况5处理。
                 */
-                if (BLACK == s->color && RED == s->lchild->color && BLACK == s->rchild->color) {
+                if (/*BLACK == s->color &&*/ RED == s->lchild->color && BLACK == s->rchild->color) {
                     s->color = RED;
                     s->lchild->color = BLACK;
                     rbtree_rotate_right(t, s);
@@ -298,10 +301,10 @@ void rbtree_delete_fixup(RBTree* t, RBTreeNode* cur) {
                  * 原来通过SR的路径黑高也不变（P->S->SR变为S->SR，少了个红节点不影响，而SR在旋转后变为N的叔父）
                  * 此时性质5已修复。
                 */
-                if (BLACK == s->color && RED == s->rchild->color) {
+                if (/*BLACK == s->color &&*/ RED == s->rchild->color) {
                     s->color = cur->parent->color;
                     cur->parent->color = BLACK;
-                    s->rchild->color = RED;
+                    s->rchild->color = BLACK;
                     rbtree_rotate_left(t, cur->parent);
 
                     // 红黑树已修复，退出循环
@@ -318,22 +321,22 @@ void rbtree_delete_fixup(RBTree* t, RBTreeNode* cur) {
                 s = rbtree_sibling(cur);
             }
 
-            if (BLACK == s->color && BLACK == s->lchild->color && BLACK == s->rchild->color) {
+            if (/*BLACK == s->color &&*/ BLACK == s->lchild->color && BLACK == s->rchild->color) {
                 s->color = RED;
                 cur = cur->parent;
             }
             else {
-                if (BLACK == s->color && RED == s->rchild->color && BLACK == s->lchild->color) {
+                if (/*BLACK == s->color &&*/ RED == s->rchild->color && BLACK == s->lchild->color) {
                     s->color = RED;
                     s->rchild->color = BLACK;
                     rbtree_rotate_left(t, s);
                     s = rbtree_sibling(cur);
                 }
 
-                if (BLACK == s->color && RED == s->lchild->color) {
+                if (/*BLACK == s->color &&*/ RED == s->lchild->color) {
                     s->color = cur->parent->color;
                     cur->parent->color = BLACK;
-                    s->lchild->color = RED;
+                    s->lchild->color = BLACK;
                     rbtree_rotate_right(t, cur->parent);
 
                     cur = t->root;
@@ -341,15 +344,18 @@ void rbtree_delete_fixup(RBTree* t, RBTreeNode* cur) {
             }
         }
     }
-    // 情况1会走到这
-    // 如果当前节点是根节点或者是红色，则将颜色改为黑色
+    /* 
+     * 实际删除节点是黑色，儿子节点是红色时会走到这
+     * 情况1会走到这
+     * 如果当前节点是根节点或者是红色，则将颜色改为黑色
+    */ 
     cur->color = BLACK;
 }
 
 /*
  * d是想要删除节点
  * r是实际删除的节点
- * n是实际删除节点的儿子（当前节点）
+ * cur是实际删除节点的儿子（当前节点）
 
  * 找到d的后继r
 */
@@ -373,7 +379,7 @@ RBTreeNode* rbtree_delete(RBTree* t, RBTreeNode* d) {
 
     // 实际删除的节点r替换为它的儿子n
     if (r->parent == t->nil) {
-        t->root = t->nil;
+        t->root = cur;
     }
     else if (r == r->parent->lchild) {
         r->parent->lchild = cur;
@@ -381,10 +387,7 @@ RBTreeNode* rbtree_delete(RBTree* t, RBTreeNode* d) {
     else {
         r->parent->rchild = cur;
     }
-
-    //if (cur != t->nil) {
     cur->parent = r->parent;
-    //}
     
     // 想要删除的节点不用实际删除，替换key，value就行
     if (r != d) {
@@ -392,11 +395,6 @@ RBTreeNode* rbtree_delete(RBTree* t, RBTreeNode* d) {
         d->value = r->value;
     }
     
-    //if (RED == r->color) {
-    //    return r;
-    //}
-
-    //if (BLACK == cur->color) {
     if (BLACK == r->color) {
         rbtree_delete_fixup(t, cur);
     }
@@ -423,7 +421,7 @@ int main() {
     t.nil->rchild = NULL;
     t.nil->parent = NULL;
 
-    KeyType a[] = { 11, 32, 23, 54, 15, 66, 44, 99, 100, 8};
+    KeyType a[] = { 11, 32, 23, 54, 15, 66, 44, 99, 100, 8 };
 
     int i;
     int len = sizeof(a) / sizeof(KeyType);
@@ -441,11 +439,16 @@ int main() {
     printf("\n");
 
     //printf("删除前：\n");
-    for (i = 0; i < len / 2; ++i) {
+    for (i = 0; i < len /*/ 2*/; ++i) {
         RBTreeNode* n = rbtree_find(&t, a[i]);
         if (n) {
             printf("删除%d\n", a[i]);
-            rbtree_delete(&t, n);
+            RBTreeNode* d = rbtree_delete(&t, n);
+            if (d) {
+                free(d);
+            }
+            print(&t, t.root);
+            printf("\n");
         }
     }
     printf("删除后：\n");
