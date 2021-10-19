@@ -303,6 +303,9 @@ void rbtree_delete_fixup(RBTree* t, RBTreeNode* cur) {
                     cur->parent->color = BLACK;
                     s->rchild->color = RED;
                     rbtree_rotate_left(t, cur->parent);
+
+                    // ºìºÚÊ÷ÒÑÐÞ¸´£¬ÍË³öÑ­»·
+                    cur = t->root;
                 }
             }
         }
@@ -332,6 +335,8 @@ void rbtree_delete_fixup(RBTree* t, RBTreeNode* cur) {
                     cur->parent->color = BLACK;
                     s->lchild->color = RED;
                     rbtree_rotate_right(t, cur->parent);
+
+                    cur = t->root;
                 }
             }
         }
@@ -439,6 +444,7 @@ int main() {
     for (i = 0; i < len / 2; ++i) {
         RBTreeNode* n = rbtree_find(&t, a[i]);
         if (n) {
+            printf("É¾³ý%d\n", a[i]);
             rbtree_delete(&t, n);
         }
     }
