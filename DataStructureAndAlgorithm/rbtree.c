@@ -35,6 +35,7 @@ typedef struct _RBTree {
 } RBTree;
 
 // 父节点是x
+// 需要处理4个节点，x，y，x的父亲，y的左儿子
 void rbtree_rotate_left(RBTree* t, RBTreeNode* x) {
     RBTreeNode* y = x->rchild;
     x->rchild = y->lchild;
@@ -207,6 +208,7 @@ void rbtree_insert(RBTree* t, RBTreeNode* n) {
         }
     }
     else {
+        // 插入的是第一个节点（根节点）
         t->root = n;
     }
 
