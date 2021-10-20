@@ -276,7 +276,7 @@ void rbtree_delete_fixup(RBTree* t, RBTreeNode* cur) {
              * 但是通过P的路径的黑高还是比不通过P的路径的黑高少1，所以还需要继续修复。将当前节点改为父节点P。
              * 注意这里P可能是黑色也可能是红色，这两种情况统一处理了，如果P是红色，则退出循环，将当前节点变为黑色，避免破坏性质4（P,S都是红色）
             */
-            if (/*BLACK == s->color &&*/ BLACK == s->lchild->color && BLACK == s->rchild->color) {
+            if (BLACK == s->lchild->color && BLACK == s->rchild->color) {
                 s->color = RED;
                 cur = cur->parent;
             }
@@ -286,7 +286,7 @@ void rbtree_delete_fixup(RBTree* t, RBTreeNode* cur) {
                  * 交换兄弟节点S和左儿子SL的颜色，对S右旋。
                  * 旋转和变色后各路径的黑高和原来相同，通过N的路径还是黑高少1，通过SR的路径黑高不变，此时满足情况5，跳到情况5处理。
                 */
-                if (/*BLACK == s->color &&*/ RED == s->lchild->color && BLACK == s->rchild->color) {
+                if (RED == s->lchild->color && BLACK == s->rchild->color) {
                     s->color = RED;
                     s->lchild->color = BLACK;
                     rbtree_rotate_right(t, s);
@@ -301,7 +301,7 @@ void rbtree_delete_fixup(RBTree* t, RBTreeNode* cur) {
                  * 原来通过SR的路径黑高也不变（P->S->SR变为S->SR，少了个红节点不影响，而SR在旋转后变为N的叔父）
                  * 此时性质5已修复。
                 */
-                if (/*BLACK == s->color &&*/ RED == s->rchild->color) {
+                if (RED == s->rchild->color) {
                     s->color = cur->parent->color;
                     cur->parent->color = BLACK;
                     s->rchild->color = BLACK;
@@ -321,19 +321,19 @@ void rbtree_delete_fixup(RBTree* t, RBTreeNode* cur) {
                 s = rbtree_sibling(cur);
             }
 
-            if (/*BLACK == s->color &&*/ BLACK == s->lchild->color && BLACK == s->rchild->color) {
+            if (BLACK == s->lchild->color && BLACK == s->rchild->color) {
                 s->color = RED;
                 cur = cur->parent;
             }
             else {
-                if (/*BLACK == s->color &&*/ RED == s->rchild->color && BLACK == s->lchild->color) {
+                if (RED == s->rchild->color && BLACK == s->lchild->color) {
                     s->color = RED;
                     s->rchild->color = BLACK;
                     rbtree_rotate_left(t, s);
                     s = rbtree_sibling(cur);
                 }
 
-                if (/*BLACK == s->color &&*/ RED == s->lchild->color) {
+                if (RED == s->lchild->color) {
                     s->color = cur->parent->color;
                     cur->parent->color = BLACK;
                     s->lchild->color = BLACK;
