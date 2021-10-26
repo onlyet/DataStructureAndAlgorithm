@@ -74,5 +74,8 @@
     <ClCompile Include="..\0\rbtree.c">
       <Filter>0</Filter>
     </ClCompile>
+    <ClCompile Include="btree.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
