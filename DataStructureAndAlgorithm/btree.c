@@ -8,32 +8,52 @@ typedef int KeyType;
 
 typedef struct _btree_node {
     KeyType* keys;	                // 关键字数组
-    int keyNum;				        // 关键字数量
+    int key_num;				    // 关键字数量
     struct _btree_node** childs;    // 子节点数组
-    int isLeaf				        // 是否叶子节点
+    int is_leaf				        // 是否叶子节点
 } btree_node;
 
 typedef struct _btree {
     btree_node* root;
-    int         order;               // 几阶
+    int         half_order;         // 阶数的二分之一
 } btree;
 
-btree_node* btree_create(/*btree_node* root*/) {
+btree_node* btree_create_node(int half_order, int is_leaf) {
 
     btree_node* n = (btree_node*)calloc(1, sizeof(btree_node));
     assert(NULL != n);
 
+    n->keys = (KeyType*)calloc(1, sizeof(KeyType) * (2 * half_order - 1));
+    assert(NULL != n->keys);
 
+    n->childs = (btree_node**)calloc(1, sizeof(btree_node*) * (2 * half_order));
+    assert(NULL != n->childs);
+
+    n->is_leaf = is_leaf;
+
+    return n;
+}
+
+void btree_destroy_node(btree_node* n) {
+    if (n) {
+        if (n->keys) {
+            free(n->keys);
+            n->keys = NULL;
+        }
+        if (n->childs) {
+            free(n->childs);
+            n->childs = NULL;
+        }
+    }
+}
+
+void btree_create(btree* t, int half_order) {
+    t->root = btree_create_node(half_order, 1);
+    t->half_order = half_order;
 }
 
 int main() {
-    btree* t = (btree*)malloc(sizeof(btree));
-    assert(NULL != t);
+    btree t;
 
-    t->order = HalfOrder * 2;
-    t->root = (btree_node*)calloc(1, sizeof(btree_node));
-    assert(NULL != t->root);
-
-    btree_create(t);
-
+    btree_create(&t, HalfOrder);
 }
