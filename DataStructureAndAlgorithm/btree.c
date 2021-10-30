@@ -10,7 +10,7 @@ typedef struct _btree_node {
     KeyType* keys;	                // 关键字数组
     int key_num;				    // 关键字数量
     struct _btree_node** childs;    // 子节点数组
-    int is_leaf				        // 是否叶子节点
+    int is_leaf;				    // 是否叶子节点
 } btree_node;
 
 typedef struct _btree {
@@ -29,6 +29,7 @@ btree_node* btree_create_node(int half_order, int is_leaf) {
     n->childs = (btree_node**)calloc(1, sizeof(btree_node*) * (2 * half_order));
     assert(NULL != n->childs);
 
+    n->key_num = 0;
     n->is_leaf = is_leaf;
 
     return n;

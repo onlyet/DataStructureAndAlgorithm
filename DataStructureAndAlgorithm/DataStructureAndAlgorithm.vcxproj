@@ -125,10 +125,13 @@
     <ClInclude Include="stack_queue_interview.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\0\btree.c" />
     <ClCompile Include="..\0\rbtree.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="btree.c" />
+    <ClCompile Include="btree.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="kmp.cpp" />
     <ClCompile Include="linked_list_no_header.cpp" />
     <ClCompile Include="main.cpp">
@@ -136,7 +139,7 @@
     </ClCompile>
     <ClCompile Include="rbtree.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
