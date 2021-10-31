@@ -18,7 +18,7 @@ typedef struct _btree_node {
 
 typedef struct _btree {
 	btree_node *root;
-	int t;
+	int t;  // 阶数的二分之一
 } btree;
 
 btree_node *btree_create_node(int t, int leaf) {
@@ -53,7 +53,11 @@ void btree_create(btree *T, int t) {
 	
 }
 
-// B树T的x节点的第i颗子树将要分裂
+/*
+ * B树T的x节点的第i颗子树y将要分裂
+ * y: 分裂节点
+ * z：新节点
+*/
 void btree_split_child(btree *T, btree_node *x, int i) {
 	int t = T->t;
 
@@ -63,9 +67,11 @@ void btree_split_child(btree *T, btree_node *x, int i) {
 	z->num = t - 1;
 
 	int j = 0;
+    // 将分裂节点的后一半关键字拷贝到新节点
 	for (j = 0;j < t-1;j ++) {
 		z->keys[j] = y->keys[j+t];
 	}
+    // 将分裂节点的后一半子节点指针拷贝到新节点
 	if (y->leaf == 0) {
 		for (j = 0;j < t;j ++) {
 			z->childrens[j] = y->childrens[j+t];
@@ -87,12 +93,16 @@ void btree_split_child(btree *T, btree_node *x, int i) {
 	
 }
 
+/*
+ * 对非满结点进行插入关键字
+ * x是非满节点
+ */
 void btree_insert_nonfull(btree *T, btree_node *x, KEY_VALUE k) {
 
 	int i = x->num - 1;
 
+    // 将关键字插入到关键字数组中，相应关键字后移（类似于插入排序）
 	if (x->leaf == 1) {
-		
 		while (i >= 0 && x->keys[i] > k) {
 			x->keys[i+1] = x->keys[i];
 			i --;
@@ -118,15 +128,25 @@ void btree_insert(btree *T, KEY_VALUE key) {
 	btree_node *r = T->root;
 	if (r->num == 2 * T->t - 1) {
 		
+        // 创建节点node作为新的根节点
 		btree_node *node = btree_create_node(T->t, 0);
 		T->root = node;
 
+        // 旧根节点r变成新根节点node的第0个子节点
 		node->childrens[0] = r;
 
+        // 旧根节点r分裂出一个新的节点z
 		btree_split_child(T, node, 0);
 
+        /*
+         * 比较新插入的键key和新根节点node的第0个键（唯一一个键）的大小
+         * 如果key较小，则插入到第0个子节点，如果key较大，则插入到第1个子节点
+         * 注意：第0个子节点是旧根节点，第1个子节点是新分裂出的节点z
+        */
 		int i = 0;
-		if (node->keys[0] < key) i++;
+        if (node->keys[0] < key) {
+            i++;
+        }
 		btree_insert_nonfull(T, node->childrens[i], key);
 		
 	} else {
@@ -366,8 +386,9 @@ int main() {
 	srand(48);
 
 	int i = 0;
-	char key[52] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-	for (i = 0;i < 52;i ++) {
+    //char key[52] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    char key[52] = "ABCDEFGHIJKLMNOPQRSTU";
+    for (i = 0; i < /*52*/21; i++) {
 		//key[i] = rand() % 1000;
 		printf("%c ", key[i]);
 		btree_insert(&T, key[i]);
