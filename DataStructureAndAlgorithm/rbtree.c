@@ -181,7 +181,7 @@ void rbtree_insert_fixup(RBTree* t, RBTreeNode* x) {
     }
 }
 
-// n是插入节点
+// n是插入节点，y是插入节点的父节点
 void rbtree_insert(RBTree* t, RBTreeNode* n) {
     RBTreeNode* x = t->root;
     RBTreeNode* y = x;
@@ -243,7 +243,6 @@ RBTreeNode* rbtree_suffix(RBTree* t, RBTreeNode* n) {
 }
 
 RBTreeNode* rbtree_sibling(RBTreeNode* n) {
-    RBTreeNode* tmp = n->parent;
     return n == n->parent->lchild ? n->parent->rchild : n->parent->lchild;
 }
 
@@ -355,15 +354,15 @@ void rbtree_delete_fixup(RBTree* t, RBTreeNode* cur) {
 
 /*
  * d是想要删除节点
- * r是实际删除的节点
+ * r是实际删除的节点（d或者d的后继节点）
  * cur是实际删除节点的儿子（当前节点）
 
- * 找到d的后继r
+ * 返回实际删除的节点，在外部free
 */
 RBTreeNode* rbtree_delete(RBTree* t, RBTreeNode* d) {
     RBTreeNode* r;
     RBTreeNode* cur;
-    // 有两个非叶子节点则查找前驱
+    // 有两个非叶子节点则查找后继节点
     if (d->lchild != t->nil && d->rchild != t->nil) {
         r = rbtree_suffix(t, d);
     }
