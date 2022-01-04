@@ -116,19 +116,38 @@ void btree_split_node(btree* t, btree_node* x, int i) {
  * key是插入的键
 */
 void btree_insert_nonfull(btree* t, btree_node* x, KeyType key) {
+    // 叶子节点不需要处理子节点指针
+    int i;
+    int j;
     if (x->is_leaf) {
-        int i;
-        for (i = 0; key > x->keys[i] && i <= x->key_num - 1; ) {
+        // 先找到插入位置
+        for (i = 0; i <= x->key_num - 1 && key > x->keys[i]; ) {
             ++i;
         }
-        int j;
-        for (j = x->key_num - 1; j > i; --j) {
+        // 这里节点是非满的，可以访问最后一个key之后的那个key，所有访问keys[key_num]没问题
+        for (j = x->key_num ; j > i; --j) {
             x->keys[j] = x->keys[j - 1];
         }
         x->keys[i] = key;
     }
     else {
+        // btree_insert_nonfull应该是在这里判断节点是否满了
+        // 先找到插入子树位置i
+        for (i = 0; i <= x->key_num - 1 && key > x->keys[i]; ) {
+            ++i;
+        }
 
+        if (x->childs[i]->key_num == 2 * t->half_degree - 1) {
+            btree_split_node(t, x, i);
+
+            // 比较key和x节点的第i个key，如果key大则插入第i个子节点，key小则插入第i+1个子节点
+            if (key > x->keys[i]) {
+                ++i;
+            }
+        }
+
+        // 插入子树
+        btree_insert_nonfull(t, x->childs[i], key);
     }
 }
 
