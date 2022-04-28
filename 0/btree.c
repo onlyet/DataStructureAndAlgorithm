@@ -378,6 +378,7 @@ int btree_delete(btree *T, KEY_VALUE key) {
 	return 0;
 }
 
+#if 0
 
 int main() {
 	btree T = {0};
@@ -405,4 +406,4 @@ int main() {
 	
 }
 
-
+#endif

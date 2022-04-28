@@ -363,11 +363,17 @@ void heapify(T arr[], int start, int end) {
 
 template<typename T>
 void heap_sort(T arr[], int len) {
+    int end = len - 1;
+
+    /*
+     * 先将数组所有元素构造最大堆（大根堆，大顶堆）
+     * 构造完成后，堆顶元素（数组第0个元素）的值最大。
+     */
     for (int i = len / 2 - 1; i >= 0; --i) {
-        heapify(arr, i, len - 1);
+        heapify(arr, i, end);
     }
 
-    for (int i = len - 1; i > 0; --i) {
+    for (int i = end; i > 0; --i) {
         std::swap(arr[0], arr[i]);
         heapify(arr, 0, i - 1);
     }

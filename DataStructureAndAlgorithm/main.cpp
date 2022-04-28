@@ -256,9 +256,10 @@ void binary_tree_test()
 
 void sort_test()
 {
-#if 0
-    //int a[10] = { 15, 3, 7, 42, 1, 26, 8, 84, 99, 10 };
-    int a[20] = { 18, 162, 83, 20, 198, 40, 230, 227, 289, 105, 76, 236, 173, 276, 192, 277, 85, 169, 52, 216 };
+#if 1
+    const int len = 10;
+    int a[len] = { 15, 3, 7, 42, 1, 26, 8, 84, 99, 10 };
+    //int a[20] = { 18, 162, 83, 20, 198, 40, 230, 227, 289, 105, 76, 236, 173, 276, 192, 277, 85, 169, 52, 216 };
     int tmp[10] = { 0 };
 #else
     int len = 20;
@@ -286,12 +287,12 @@ void sort_test()
     //merge_sort(a, 0, 9, tmp);
     //merge_sort(a, 10, tmp);
 
-    //heap_sort(a, 10);
+    heap_sort(a, 10);
     //counting_sort_demo(a, 10);
     //BucketSort(10, a);
 
     //bucket_sort(a, 20);
-    radix_sort(a, len);
+    //radix_sort(a, len);
 
     cout << " After sorted:";
     //for (auto &e : a) {
@@ -307,9 +308,9 @@ int main()
 {
 	
 	try {
-		linked_list_test();
+		//linked_list_test();
 
-		//sort_test();
+		sort_test();
 
 		//verify_pop_logic();
 
@@ -317,7 +318,7 @@ int main()
 
         //sort_test();
 
-        kmp_test();
+        //kmp_test();
 
 	}
 	catch (std::exception &e) {

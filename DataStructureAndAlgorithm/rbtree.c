@@ -411,7 +411,8 @@ void print(RBTree* t, RBTreeNode* root) {
     print(t, root->rchild);
 }
 
-// main
+#if 0
+
 int main() {
     RBTree t;
     t.nil = (RBTreeNode*)malloc(sizeof(RBTreeNode));
@@ -460,3 +461,5 @@ int main() {
     system("pause");
     return 0;
 }
+
+#endif
