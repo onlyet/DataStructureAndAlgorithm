@@ -267,6 +267,15 @@ void quick_sort(T arr[], int len) {
 }
 
 
+/**
+ * @brief 合并两个有序数组（[left,mid]和[mid+1,right]）为一个有序数组
+ * @tparam T 
+ * @param arr 数组指针
+ * @param tmp 辅助数组（临时合并用）
+ * @param left 第一个数组开始位置在arr中的下标
+ * @param mid mid是第一个数组的结束位置，mid+1是第二个数组的开始位置
+ * @param right 第二个数组结束位置在arr中的下标
+*/
 template<typename T>
 void merge(T arr[], T tmp[], int left, int mid, int right) {
     int i = left, j = mid + 1;
