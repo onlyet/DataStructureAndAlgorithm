@@ -44,29 +44,6 @@ void bubble_sort_2(T *arr, int n)
     }
 }
 
-//template<typename T>
-//void bubble_sort_3(T *arr, int n)
-//{
-//    T sorted_index = n - 1 - i, sorted_index_tmp = sorted_index;
-//    for (int i = 0; i < n - 1; ++i) {
-//        bool done = true;
-//        for (int j = 0; j < sorted_index; ++j) {
-//            if (arr[j] > arr[j + 1]) {
-//                Swap(arr[j], arr[j + 1]);
-//                sorted_index_tmp = j;
-//                done = false;
-//            }
-//        }
-//        if (done) {
-//            break;
-//        }
-//
-//        if (sorted_index > sorted_index_tmp) {
-//            sorted_index = sorted_index_tmp;
-//        }
-//    }
-//}
-
 template<typename T>
 void bubble_sort_3(T *arr, int n)
 {
@@ -129,22 +106,6 @@ void shell_sort(int arr[], int len) {
         }
 }
 #endif
-
-template<typename T>
-void shell_sort(T *arr, int len)
-{
-    for (int stepLen = len / 2; stepLen >= 1; stepLen /= 2) {
-        for (int i = stepLen; i < len; ++i) {
-            T key = arr[i];
-            T j;
-            for (j = i; j >= stepLen && arr[j - stepLen] > key; j -= stepLen) {
-                arr[j] = arr[j - stepLen];
-            }
-            arr[j] = key;
-        }
-    }
-}
-
 #if 0
 template<typename T>
 void shell_sort(T array[], int length) {
@@ -163,74 +124,20 @@ void shell_sort(T array[], int length) {
 }
 #endif
 
-#if 0
-//思路：递归和分治
 template<typename T>
-void quick_sort(T *a, int left, int right)
+void shell_sort(T *arr, int len)
 {
-    if (left < right) {     //递归终止条件：left>=right
-        int i = left, j = right;
-        T mid = a[left];
-        while (i < j) {
-            while (i < j && a[j] >= mid) {   //从右往左找到第一个小于mid的数的下标
-                --j;
+    for (int stepLen = len / 2; stepLen >= 1; stepLen /= 2) {
+        for (int i = stepLen; i < len; ++i) {
+            T key = arr[i];
+            T j;
+            for (j = i; j >= stepLen && arr[j - stepLen] > key; j -= stepLen) {
+                arr[j] = arr[j - stepLen];
             }
-            if (i < j) {
-                a[i++] = a[j];
-            }
-            while (i < j && a[i] <= mid) {   //从左往右找到第一个大于mid的数的下标
-                ++i;
-            }
-            if (i < j) {
-                a[j--] = a[i];
-            }
-        }
-        a[i] = mid;     //将中值放在找到的位置
-        quick_sort(a, left, i - 1);
-        quick_sort(a, i + 1, right);
-    }
-}
-#endif
-
-#if 0
-template<typename T>
-static void merge_array(T *a, int start, int mid, int end, T *tmp)
-{
-    int i = start, j = mid + 1, k = 0;
-    while (i <= mid && j <= end) {
-        if (a[i] < a[j]) {
-            tmp[k++] = a[i++];
-        }
-        else {
-            tmp[k++] = a[j++];
+            arr[j] = key;
         }
     }
-    while (i <= mid) {
-        tmp[k++] = a[i++];
-    }
-    while (j <= end) {
-        tmp[k++] = a[j++];
-    }
-    //for (int i = 0; i < end - start + 1; ++i) {
-    //    a[start + i] = tmp[i];
-    //}
-    for (int ii = 0; ii < k; ++ii) {
-        a[start + ii] = tmp[ii];
-    }
 }
-
-//time:O(N*logN), space:O(N)
-template<typename T>
-void merge_sort(T *a, int start, int end, T *tmp)
-{
-    if (start < end) {
-        int mid = (start + end) / 2;
-        merge_sort(a, start, mid, tmp); 
-        merge_sort(a, mid + 1, end, tmp);
-        merge_array(a, start, mid, end, tmp);
-    }
-}
-#endif
 
 template<typename T>
 void quick_sort_impl(T arr[], int left, int right) {
@@ -240,14 +147,14 @@ void quick_sort_impl(T arr[], int left, int right) {
     int i = left, j = right;
     T midValue = arr[i];
 
-    while (i < j) {
-        while (i < j && arr[j] >= midValue) {
+    while (i < j) { //递归终止条件：left>=right
+        while (i < j && arr[j] >= midValue) { //从右往左找到第一个小于mid的数的下标
             --j;
         }
         if (i < j) {
             arr[i++] = arr[j];
         }
-        while (i < j && arr[i] <= midValue) {
+        while (i < j && arr[i] <= midValue) { //从左往右找到第一个大于mid的数的下标
             ++i;
         }
         if (i < j) {
@@ -317,51 +224,21 @@ void merge_sort(T arr[], int len, T tmp[]) {
     merge_sort_impl(arr, tmp, 0, len - 1);
 }
 
-#if 0
 template<typename T>
-void heapify(T *arr, int len) {
-    int parent;
-    for (int i = 1; i < len; ++i) {
-        int j = i;
-        while (j > 0) {
-            if (j % 2) {
-                parent = (j - 1) / 2;
-            }
-            else {
-                parent = (j - 2) / 2;
-            }
-            if (arr[j] > arr[parent]) {
-                std::swap(arr[j], arr[parent]);
-                j = parent;
-            }
-            else {
-                break;
-            }
-        }
-    }
-}
-
-template<typename T>
-void heap_sort(T *arr, int len) {
-    int end = len;
-    while (end > 1) {
-        heapify(arr, end);
-        std::swap(arr[0], arr[end - 1]);
-        --end;
-    }
-}
-#elif 1
-template<typename T>
-void heapify(T arr[], int start, int end) {
+void build_max_heap(T arr[], int start, int end) {
     int dad = start;
     int son = 2 * dad + 1;
+    // 子节点在未排序元素范围内才需要操作
     while (son <= end) {
+        // 选择子节点中较大值
         if (son + 1 <= end && arr[son] < arr[son + 1]) {
             ++son;
         }
+        // 父节点大于子节点表示构造完成
         if (arr[dad] > arr[son]) {
             return;
         }
+        // 使父节点大于子节点
         else {
             std::swap(arr[dad], arr[son]);
             dad = son;
@@ -370,62 +247,37 @@ void heapify(T arr[], int start, int end) {
     }
 }
 
+/**
+ * @brief 虽然是从小到大排序，但是本方法使用的是最大堆
+ * 第一步：先将所有元素构造最大堆
+ * 注意第一次构造最大堆时从最后一个有孩子的节点开始（也就是len/2-1处，因为叶子节点已经是最大堆，不需要操作），然后往前构造最大堆
+ * 第一次构造最大堆需要循环len/2次，后面只需要一次
+ * 
+ * 第二步：循环里
+ * 将堆顶最大值与最后一个元素交换，此时最后一个元素有序
+ * 将未排序的所有元素构造最大堆
+ * 这样每次迭代最大值都移动到后，最后变成递增序列
+ * 
+ * @tparam T 
+ * @param arr 数组名
+ * @param len 数组长度
+*/
 template<typename T>
 void heap_sort(T arr[], int len) {
     int end = len - 1;
 
-    /*
-     * 先将数组所有元素构造最大堆（大根堆，大顶堆）
-     * 构造完成后，堆顶元素（数组第0个元素）的值最大。
-     */
+    // 第一步
     for (int i = len / 2 - 1; i >= 0; --i) {
-        heapify(arr, i, end);
+        build_max_heap(arr, i, end);
     }
-
+    // 第二步
     for (int i = end; i > 0; --i) {
         std::swap(arr[0], arr[i]);
-        heapify(arr, 0, i - 1);
-    }
-}
-#else
-void max_heapify(int arr[], int start, int end) {
-    // 建立父節點指標和子節點指標
-    int dad = start;
-    int son = dad * 2 + 1;
-    while (son <= end) { // 若子節點指標在範圍內才做比較
-        if (son + 1 <= end && arr[son] < arr[son + 1]) // 先比較兩個子節點大小，選擇最大的
-            son++;
-        if (arr[dad] > arr[son]) // 如果父節點大於子節點代表調整完畢，直接跳出函數
-            return;
-        else { // 否則交換父子內容再繼續子節點和孫節點比較
-            std::swap(arr[dad], arr[son]);
-            dad = son;
-            son = dad * 2 + 1;
-        }
+        build_max_heap(arr, 0, i - 1);
     }
 }
 
-void heap_sort(int arr[], int len) {
-    // 初始化，i從最後一個父節點開始調整
-    for (int i = len / 2 - 1; i >= 0; i--)
-    {
-        max_heapify(arr, i, len - 1);
-    }
-
-    // 先將第一個元素和已经排好的元素前一位做交換，再從新調整(刚调整的元素之前的元素)，直到排序完畢
-    for (int i = len - 1; i > 0; i--) {
-        std::swap(arr[0], arr[i]);
-        for (int i = 0; i < len; ++i) {
-            std::cout << arr[i] << " ";
-        }
-        std::cout << std::endl;
-
-        max_heapify(arr, 0, i - 1);
-    }
-}
-#endif
-
-void counting_sort(int arr[], int sorted_arr[], int len, int max) {
+void counting_sort_impl(int arr[], int sorted_arr[], int len, int max) {
     int *count_arr = new int[max + 1];
     for (int i = 0; i <= max; ++i) {
         count_arr[i] = 0;
@@ -436,7 +288,6 @@ void counting_sort(int arr[], int sorted_arr[], int len, int max) {
     for (int i = 1; i <= max; ++i) {
         count_arr[i] += count_arr[i - 1];
     }
-    //for (int i = len - 1; i >= 0; --i) {
     for (int i = 0; i < len; ++i) {
         int j = arr[i];
         sorted_arr[count_arr[j] - 1] = j;
@@ -445,10 +296,10 @@ void counting_sort(int arr[], int sorted_arr[], int len, int max) {
     delete[] count_arr;
 }
 
-void counting_sort_demo(int arr[], int len) {
+void counting_sort(int arr[], int len) {
     int *sorted_arr = new int[len];
     int max = 99;
-    counting_sort(arr, sorted_arr, len, max);
+    counting_sort_impl(arr, sorted_arr, len, max);
     for (int i = 0; i < len; ++i) {
         std::cout << sorted_arr[i] << " ";
     }
@@ -597,20 +448,6 @@ int get_max_digit(T arr[], int len) {
         return 1;
     }
 
-    //int max_digit = 1;
-    //for (int i = 0; i < len; ++i) {
-    //    int digit = 1;
-    //    int j = 10;
-    //    while (arr[i] / j) {
-    //        ++digit;
-    //        j *= 10;
-    //    }
-    //    if (digit > max_digit) {
-    //        max_digit = digit;
-    //    }
-    //}
-    //return max_digit;
-
     T maxValue = arr[0];
     for (int i = 1; i < len; ++i) {
         if (arr[i] > maxValue) {
@@ -626,7 +463,6 @@ int get_max_digit(T arr[], int len) {
     return digit;
 }
 
-//template<typename T>
 // 基数排序的桶相当于一个栈，元素后进先出，所以填充辅助数组的时候从后往前填充（len-1 -> 0）
 void radix_sort(int arr[], int len) {
     int max_digit = get_max_digit(arr, len);
@@ -658,11 +494,6 @@ void radix_sort(int arr[], int len) {
             arr[i] = tmp_arr[i];
         }
         radix *= 10;
-
-        //for (int i = 0; i < len; ++i) {
-        //    cout << arr[i] << " ";
-        //}
-        //cout << endl;
     }
     delete[] tmp_arr;
 }

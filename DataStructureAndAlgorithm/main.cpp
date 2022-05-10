@@ -285,10 +285,10 @@ void sort_test()
     //quick_sort(a, 0, 9);
     //quick_sort(a, 10);
     //merge_sort(a, 0, 9, tmp);
-    merge_sort(a, 10, tmp);
+    //merge_sort(a, 10, tmp);
 
     heap_sort(a, 10);
-    //counting_sort_demo(a, 10);
+    //counting_sort(a, 10);
     //BucketSort(10, a);
 
     //bucket_sort(a, 20);
